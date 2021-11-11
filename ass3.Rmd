@@ -1,15 +1,64 @@
 ---
 title: "Gapminder"
-output: html_notebook
+author: "Ann Elisabeth Jacobsen og Heidi Marie Rolfsnes"
+output:
+  word_document: default
+  html_notebook: default
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
 1.  What information does the file ddf_concepts.csv contain?
-2.  What information does the file ddf---entities--geo---country.csv
+
+    Filen inneholder data over statistiske undersøkelser.
+
+    ```{r Samling av statistiske undersøkelser, warning=TRUE}
+    ddf_concepts
+    ```
+
+2.  What information does the file ddf---entities---geo---country.csv
     contain?
+
+    ```{r}
+    ddf_entities_geo_country
+    ```
+
 3.  What information does the the file
     ddg_entities--geo--un_sdg_region.csv contain?
-4.  What variables does the gapminder dataset from the gapminder package
-    contain? To what continent are Australia and New Zealand assigned?
+
+    ```{r}
+    ddf_entities_geo_un_sdg_region
+    ```
+
+4.  What variables does the gapminder dataset from the gapminlibraryder
+    package contain? To what continent are Australia and New Zealand
+    assigned?
+
+    ```{r}
+    gapminder
+    ```
+
 5.  Recreate the continent variable in gapminder with the new data?
+
+    ```{r}
+    ddf_entities_geo_country
+    ```
+
+    ```{r}
+    tibble(country = iso3166_1_alpha3)
+    ```
+
 6.  How many countries are there now?
+
 7.  How many conutries are there now in each continent?
+
+```{r}
+g_c <- read.csv("data/ddf--entities--geo--country.csv")
+print(g_c)
+```
+
+```{r}
+g_c 
+<- 
+```
