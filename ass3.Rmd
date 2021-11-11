@@ -31,9 +31,8 @@ output:
     ddf_entities_geo_un_sdg_region
     ```
 
-4.  What variables does the gapminder dataset from the gapminlibraryder
-    package contain? To what continent are Australia and New Zealand
-    assigned?
+4.  What variables does the gapminder dataset from the gapminder package
+    contain? To what continent are Australia and New Zealand assigned?
 
     ```{r}
     gapminder
@@ -56,9 +55,4 @@ output:
 ```{r}
 g_c <- read.csv("data/ddf--entities--geo--country.csv")
 print(g_c)
-```
-
-```{r}
-g_c 
-<- 
 ```
