@@ -3,24 +3,72 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you
-execute code within the notebook, the results appear beneath the code.
+1.  What information does the file ddf_concepts.csv contain?
 
-Try executing this chunk by clicking the *Run* button within the chunk
-or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+    ```{r}
+    ddf_concepts
+    ```
+
+2.  What information does the file ddf---entities--geo---country.csv
+    contain?
 
 ```{r}
-plot(cars)
+ddf_entities_geo_country
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or
-by pressing *Ctrl+Alt+I*.
+3.  What information does the the file
+    ddg_entities--geo--un_sdg_region.csv contain?
 
-When you save the notebook, an HTML file containing the code and output
-will be saved alongside it (click the *Preview* button or press
-*Ctrl+Shift+K* to preview the HTML file).
+    ```{r land og kontinenter}
+    ddf_entities_geo_un_sdg_region
 
-The preview shows you a rendered HTML copy of the contents of the
-editor. Consequently, unlike *Knit*, *Preview* does not run any R code
-chunks. Instead, the output of the chunk when it was last run in the
-editor is displayed.
+    ```
+
+4.  What variables does the gapminder dataset from the gapminder package
+    contain? To what continent are Australia and New Zealand assigned?
+
+    land, kontinent, årstall for gjennomført innhenting av data,
+    forventet levealder, innbyggertall, BNP. Australia og New zealand
+    tilhører oseanina.
+
+    ```{r}
+    gapminder
+    ```
+
+5.  
+
+6.  Recreate the continent variable in gapminder with the new data?
+
+    ```{r}
+    ddf_entities_geo_country
+
+    ```
+
+    ```{r continent}
+    g_c <- read_csv("data/ddf--entities--geo--country.csv")
+    print(g_c)
+    ```
+
+    ```{r}
+    spec(g_c)
+    ```
+
+    ```{r}
+    g_c <- g_c%>%
+      mutate(continent = case_when(
+        world_4region == "asia" & un_sdg_region %in%
+    c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania",
+        world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", 
+    "un_oceania_exc_australia_and_new_zealand")) ~"asia", 
+        world_4region == "africa" ~"Afrika",
+        world_4region == "americas" ^"Amerika",
+        world_4region == "europe" ~"Europa")
+    ) %>%
+      filter(!is.na(iso3166_1_alpha3))
+    ```
+
+7.  How many countries are there now?
+
+8.  How many conutries are there now in each continent?
+
+task
