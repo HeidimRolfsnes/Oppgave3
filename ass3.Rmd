@@ -1,64 +1,74 @@
 ---
-title: "Gapminder"
-author: "Ann Elisabeth Jacobsen og Heidi Marie Rolfsnes"
-output:
-  word_document: default
-  html_notebook: default
-  pdf_document: default
-  html_document:
-    df_print: paged
+title: "R Notebook"
+output: html_notebook
 ---
 
 1.  What information does the file ddf_concepts.csv contain?
 
-    Filen inneholder data over statistiske undersøkelser.
-
-    ```{r Samling av statistiske undersøkelser, warning=TRUE}
+    ```{r}
     ddf_concepts
     ```
 
-2.  What information does the file ddf---entities---geo---country.csv
+2.  What information does the file ddf---entities--geo---country.csv
     contain?
 
-    ```{r}
-    ddf_entities_geo_country
-    ```
+```{r}
+ddf_entities_geo_country
+```
 
 3.  What information does the the file
     ddg_entities--geo--un_sdg_region.csv contain?
 
-    ```{r}
+    ```{r land og kontinenter}
     ddf_entities_geo_un_sdg_region
+
     ```
 
-4.  What variables does the gapminder dataset from the gapminlibraryder
-    package contain? To what continent are Australia and New Zealand
-    assigned?
+4.  What variables does the gapminder dataset from the gapminder package
+    contain? To what continent are Australia and New Zealand assigned?
+
+    land, kontinent, årstall for gjennomført innhenting av data,
+    forventet levealder, innbyggertall, BNP. Australia og New zealand
+    tilhører oseanina.
 
     ```{r}
     gapminder
     ```
 
-5.  Recreate the continent variable in gapminder with the new data?
+5.  
+
+6.  Recreate the continent variable in gapminder with the new data?
 
     ```{r}
     ddf_entities_geo_country
+
+    ```
+
+    ```{r continent}
+    g_c <- read_csv("data/ddf--entities--geo--country.csv")
+    print(g_c)
     ```
 
     ```{r}
-    tibble(country = iso3166_1_alpha3)
+    spec(g_c)
     ```
 
-6.  How many countries are there now?
+    ```{r}
+    g_c <- g_c%>%
+      mutate(continent = case_when(
+        world_4region == "asia" & un_sdg_region %in%
+    c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania",
+        world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", 
+    "un_oceania_exc_australia_and_new_zealand")) ~"asia", 
+        world_4region == "africa" ~"Afrika",
+        world_4region == "americas" ^"Amerika",
+        world_4region == "europe" ~"Europa")
+    ) %>%
+      filter(!is.na(iso3166_1_alpha3))
+    ```
 
-7.  How many conutries are there now in each continent?
+7.  How many countries are there now?
 
-```{r}
-g_c <- read.csv("data/ddf--entities--geo--country.csv")
-print(g_c)
-```
+8.  How many conutries are there now in each continent?
 
-```{r}
-g_c 
-<- 
-```
+task
