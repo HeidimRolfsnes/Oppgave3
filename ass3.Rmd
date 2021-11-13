@@ -3,7 +3,12 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-
+```{r setup, echo = FALSE}
+suppressMessages(library(tidyverse))
+suppressMessages(library(tibble))
+suppressMessages(library(gapminder))
+suppressMessages(library(readr))
+```
 
 1.  What information does the file ddf_concepts.csv contain?
 
@@ -33,17 +38,15 @@ ddf_entities_geo_country
     forventet levealder, innbyggertall, BNP. Australia og New zealand
     tilhører oseanina.
 
-
     ```{r}
     gapminder
     ```
 
-5.  
-
-6.  Recreate the continent variable in gapminder with the new data?
+5.  Recreate the continent variable in gapminder with the new data?
 
     ```{r}
     ddf_entities_geo_country
+
 
     ```
 
@@ -53,12 +56,41 @@ ddf_entities_geo_country
     ```
 
     ```{r}
-    spec(g_c)
+    g_c <- read_csv("Data/ddf--gapminder--systema_globalis/ddf--entities--geo--country.csv")
     ```
 
     ```{r}
-    g_c <- g_c%>%
-      mutate(continent = case_when(
+    spec(g_c)
+
+    ```
+
+    \# skulle lage noen nye variabler, height_cm, weight_kg og bmi
+
+    hoyde \<- hoyde %\>%
+
+    mutate(
+
+    height_cm = height \* 2.4,
+
+    weight_kg = weight \* 0.4536,
+
+    bmi = weight_kg/((height_cm/100)\^2)
+
+    ) %\>%
+
+    mutate(married = factor(
+
+    case_when(\# note, summary showed no NA for marital,
+
+    marital == 'married' \~ TRUE,
+
+    \# all other categories FALSE
+
+    TRUE \~ FALSE
+
+    ```{r Continent}
+    g_c <- g_c %>%
+      mutate(continent = factor(case_when(
         world_4region == "asia" & un_sdg_region %in%
     c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania",
         world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", 
@@ -70,13 +102,87 @@ ddf_entities_geo_country
       filter(!is.na(iso3166_1_alpha3))
     ```
 
-7.  How many countries are there now?
+6.  How many countries are there now?
 
 ```{r}
 g_c <- read.csv("data/ddf--entities--geo--country.csv")
 print(g_c)
 ```
 
-8.  How many conutries are there now in each continent?
+6b) How many countries are there now in each continent?
 
-task
+```{r}
+g_c %>%
+  group_by(continent) %>%
+  count()
+```
+
+7.  Create the variable Life Expectancy (lifeExp) in g_c from the file
+
+    ```{r}
+    lifeExp <- read_csv("Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints-life_expectancy_years-by-geo-time-csv"
+    col_types = cols(time = col_date(format = "%Y")))
+    ```
+
+```{r}
+lifeExp <- lifeExp %>%
+  rename(year = time)
+```
+
+8.  How many countries have information about lifeExp?
+
+9.  reduce g_c to the variables: country, name, iso3166_1\_alpha3,
+    un_sdg_region, World_4region, continent, world_6region
+
+    ```{r}
+    g_c <- g_c %>%
+      select(country,name, iso3166_1_alpha3, main_religion_2008, un_sdg_region, world_4region, continent, world_6region)
+    left_join(lifeExp, by = c("country" = "geo")) %>%
+      filter(!(is.na(year) & is.na(life-expectancy_years))) %>%
+      filter(year < "2020-01-01")
+    ```
+
+10. What is the first observation of lifeExp for the different
+    countries?
+
+    ```{r}
+    g_c_min <- g_c %>%
+      group_by(country) %>%
+      summarise(year_min = min(year)) %>%
+      arrange(desc(year_min))
+
+
+    ```
+
+11. What are the name of the 9 countries that only have life expectancy
+    data from 1950?
+
+12. Read in the total_population and join with g_c
+
+13. Read in the gdp_percapita_us_inflation_adjusted and call it "gdp_pc"
+
+    Rename life_expectancy_years to lifeExp, population_total to pop and
+    gdppercapita_us_inflation_adjusted to gdpPercap
+
+14. As in gapminder use data from every 5th year, but include 2019 at
+    the end
+
+15. Make a vector containing the names of the countries with the longest
+    time series for gdp per capita
+
+16. make a subset of gapminder, my_gapminder_1960, which include
+    countries with data from 1960-2019. How many countries are now in
+    the dataset? How many countries from each continent? how many NAs
+    are there in my_gapminder_1960
+
+17. Use ggplot() and let x be gdpPercap, y be lifeExp and size the
+    populatio. Make a plot for each of the year 1960, 1980, 2000
+    and 2019.
+
+18. Do the same four plots as above, but now use the log transform of
+    gdpPercap, i.e mapping.
+
+19. How will you characterise the development the 59 years from 1960 to
+    2019?
+
+20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
