@@ -10,6 +10,7 @@ suppressMessages(library(gapminder))
 suppressMessages(library(readr))
 ```
 
+
 1.  What information does the file ddf_concepts.csv contain?
 
     ```{r}
@@ -50,7 +51,7 @@ ddf_entities_geo_country
 
     ```
 
-    ```{r continent}
+    ```{r warning=TRUE}
     g_c <- read_csv("data/ddf--entities--geo--country.csv")
     print(g_c)
     ```
@@ -60,6 +61,8 @@ ddf_entities_geo_country
     ```
 
     ```{r}
+    g_c <- g_c %>%
+      mutate(continent = case_when(
     spec(g_c)
 
     ```
