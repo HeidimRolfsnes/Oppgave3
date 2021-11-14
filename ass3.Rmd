@@ -10,7 +10,6 @@ suppressMessages(library(gapminder))
 suppressMessages(library(readr))
 ```
 
-
 1.  What information does the file ddf_concepts.csv contain?
 
     ```{r}
@@ -57,43 +56,36 @@ ddf_entities_geo_country
     ```
 
     ```{r}
-    g_c <- read_csv("Data/ddf--gapminder--systema_globalis/ddf--entities--geo--country.csv")
-    ```
-
-    ```{r}
-    g_c <- g_c %>%
-      mutate(continent = case_when(
     spec(g_c)
 
     ```
 
-    \# skulle lage noen nye variabler, height_cm, weight_kg og bmi
+    ```{r}
+    g_c <- g_c %>%
+      mutate(continent= case_when(
+        world_4region == "asia" & un_sdg_region %in% 
+    c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania", world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", 
+    "un_oceania_exc_australia_and_new_zealand")) ~"asia", 
+        world_4region == "africa" ~"Afrika",
+        world_4region == "americas" ^"Amerika",
+        world_4region == "europe" ~"Europa")
+    ) %>%
+      filter(!is.na(iso3166_1_alpha3))
 
-    hoyde \<- hoyde %\>%
+    ```
 
-    mutate(
+    ```{r}
+    g_c <- read_csv("Data/ddf--gapminder--systema_globalis/ddf--entities--geo--country.csv")
+    ```
 
-    height_cm = height \* 2.4,
+    ```{r}
+    spec(g_c)
 
-    weight_kg = weight \* 0.4536,
-
-    bmi = weight_kg/((height_cm/100)\^2)
-
-    ) %\>%
-
-    mutate(married = factor(
-
-    case_when(\# note, summary showed no NA for marital,
-
-    marital == 'married' \~ TRUE,
-
-    \# all other categories FALSE
-
-    TRUE \~ FALSE
+    ```
 
     ```{r Continent}
     g_c <- g_c %>%
-      mutate(continent = factor(case_when(
+      mutate(continent = (case_when(
         world_4region == "asia" & un_sdg_region %in%
     c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania",
         world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", 
@@ -189,3 +181,7 @@ lifeExp <- lifeExp %>%
     2019?
 
 20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
+
+```{r}
+g_c
+```
