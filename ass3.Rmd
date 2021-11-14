@@ -8,8 +8,9 @@ suppressMessages(library(tidyverse))
 suppressMessages(library(tibble))
 suppressMessages(library(gapminder))
 suppressMessages(library(readr))
+suppressMessages(library(knitr))
+suppressMessages(library(dplyr))
 ```
-
 
 1.  What information does the file ddf_concepts.csv contain?
 
