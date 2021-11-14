@@ -12,9 +12,9 @@ suppressMessages(library(readr))
 
 1.  What information does the file ddf_concepts.csv contain?
 
-    ```{r}
+```{r}
     ddf_concepts
-    ```
+```
 
 2.  What information does the file ddf---entities--geo---country.csv
     contain?
@@ -51,7 +51,7 @@ ddf_entities_geo_country
     ```
 
     ```{r warning=TRUE}
-    g_c <- read_csv("data/ddf--entities--geo--country.csv")
+    g_c <- read_csv("data//ddf--gapminder--systema_globalis/ddf--entities--geo--country.csv")
     print(g_c)
     ```
 
@@ -61,15 +61,29 @@ ddf_entities_geo_country
     ```
 
     ```{r}
-    g_c <- g_c %>%
-      mutate(continent= case_when(
+    g_c <- g_c%>%
+      mutate( continent = case_when(
         world_4region == "asia" & un_sdg_region %in% 
-    c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania", world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", 
-    "un_oceania_exc_australia_and_new_zealand")) ~"asia", 
+    c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania", 
+    world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", "un_oceania_exc_australia_and_new_zealand")) ~"Asia", 
         world_4region == "africa" ~"Afrika",
         world_4region == "americas" ^"Amerika",
         world_4region == "europe" ~"Europa")
     ) %>%
+    filter(!is.na(iso3166_1_alpha3))
+    ```
+
+    ```{r}
+    g_c <- g_c %>%
+      mutate(continent = case_when(
+        world_4region == "asia" & un_sdg_region %in% 
+          c("un_australia_and_new_zealand", "un_oceania_exc_australia_and_new_zealand") ~ "Oceania",
+        world_4region == "asia" & !(un_sdg_region %in% 
+          c("un_australia_and_new_zealand", "un_oceania_exc_austalia_new_zealand")) ~ "Asia",
+        world_4region == "africa" ~ "Africa",
+        world_4region == "americas" ~ "Americas",
+        world_4region == "europe" ~ "Europe")
+      ) %>% 
       filter(!is.na(iso3166_1_alpha3))
 
     ```
@@ -98,6 +112,10 @@ ddf_entities_geo_country
     ```
 
 6.  How many countries are there now?
+
+```{r}
+lenght (unique(g_c$country))
+```
 
 ```{r}
 g_c <- read.csv("data/ddf--entities--geo--country.csv")
@@ -181,7 +199,3 @@ lifeExp <- lifeExp %>%
     2019?
 
 20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
-
-```{r}
-g_c
-```
