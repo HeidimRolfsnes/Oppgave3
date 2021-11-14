@@ -10,6 +10,7 @@ suppressMessages(library(gapminder))
 suppressMessages(library(readr))
 suppressMessages(library(knitr))
 suppressMessages(library(dplyr))
+options(scipen = 999)
 ```
 
 1.  What information does the file ddf_concepts.csv contain?
@@ -36,9 +37,15 @@ ddf_entities_geo_country
 4.  What variables does the gapminder dataset from the gapminder package
     contain? To what continent are Australia and New Zealand assigned?
 
-    land, kontinent, årstall for gjennomført innhenting av data,
-    forventet levealder, innbyggertall, BNP. Australia og New zealand
-    tilhører oseanina.
+    142 land
+
+    5 kontinenter
+
+    Årene 1957 til 2007
+
+    Folketall (population)
+
+    BnP per inbygger.
 
     ```{r}
     gapminder
