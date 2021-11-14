@@ -56,7 +56,7 @@ ddf_entities_geo_country
     ```
 
     ```{r}
-    g_c <- read_csv("Data/ddf--gapminder--systema_globalis/ddf--entities--geo--country.csv")
+    g_c <- read_csv("ddf--entities--geo--country.csv")
     ```
 
     ```{r}
@@ -64,33 +64,9 @@ ddf_entities_geo_country
 
     ```
 
-    \# skulle lage noen nye variabler, height_cm, weight_kg og bmi
-
-    hoyde \<- hoyde %\>%
-
-    mutate(
-
-    height_cm = height \* 2.4,
-
-    weight_kg = weight \* 0.4536,
-
-    bmi = weight_kg/((height_cm/100)\^2)
-
-    ) %\>%
-
-    mutate(married = factor(
-
-    case_when(\# note, summary showed no NA for marital,
-
-    marital == 'married' \~ TRUE,
-
-    \# all other categories FALSE
-
-    TRUE \~ FALSE
-
     ```{r Continent}
     g_c <- g_c %>%
-      mutate(continent = factor(case_when(
+      mutate(continent = (case_when(
         world_4region == "asia" & un_sdg_region %in%
     c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania",
         world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", 
@@ -104,7 +80,7 @@ ddf_entities_geo_country
 
 6.  How many countries are there now?
 
-```{r}
+```{r Countries}
 g_c <- read.csv("data/ddf--entities--geo--country.csv")
 print(g_c)
 ```
@@ -164,8 +140,27 @@ lifeExp <- lifeExp %>%
     Rename life_expectancy_years to lifeExp, population_total to pop and
     gdppercapita_us_inflation_adjusted to gdpPercap
 
+    ```{r}
+    gdp_pc <- read_csv("Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints--gdp"(
+                       col_types = cols(time = col_date(format = "%Y")))
+                       
+    g_c <- g_c %>%
+      left_join(u_pop, by = c("country" = "geo", "year" = "time"))
+    ```
+
+    ```{r}
+    g_c <- g_c %>%
+      rename(lifeExp = life_expectancy_years, 
+             pop = population_total, 
+             gdpPercap = gdppercapita_us_inflation_adjusted)
+    ```
+
 14. As in gapminder use data from every 5th year, but include 2019 at
     the end
+
+    ```{r}
+    dim(g_c_5)
+    ```
 
 15. Make a vector containing the names of the countries with the longest
     time series for gdp per capita
@@ -175,12 +170,114 @@ lifeExp <- lifeExp %>%
     the dataset? How many countries from each continent? how many NAs
     are there in my_gapminder_1960
 
+    ```{r}
+    c_min_y <- my_gapminder %>%
+      filter(!is.na(gdpPercap)) %>%
+      group_by(country)%>%
+      Summarise (min_year =min(year))
+
+    c_min_y_60 <- c_min_y$country[c_min_y$min_year == "1960.01.01"]
+      
+    my_gapminder_1960 <- my_gapminder_1960 %>%
+      filter(country %in% c_min_y_60)
+
+    dim(my_gapminder_1960)
+
+    length(unique(my_gapminder_1960$country))
+
+    my_gapminder_1960 %>%
+      distinct(country, continent) %>%
+      group_by(continent) %>%
+      count() %>%
+      kable()
+
+    (num_NA <- my_gapminder_1960[is.na(my_gapminder_1960$gdpPercap) == TRUE,])
+
+    ```
+
 17. Use ggplot() and let x be gdpPercap, y be lifeExp and size the
-    populatio. Make a plot for each of the year 1960, 1980, 2000
+    population. Make a plot for each of the year 1960, 1980, 2000
     and 2019.
+
+    ```{r}
+    my_gapminder_1960 %>%
+      filter(year <= "1960-01-01") %>%
+      ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
+      geom_point() +
+      facet_wrap(ncol = 1, ~year) +
+      coord_cartesian(ylim = c(38, 87), xlim = c(0,110000)) +
+      theme(legend.position = "bottom")
+    ```
+
+    ```{r}
+    my_gapminder_1960 %>%
+      filter(year <= "1980-01-01") %>%
+      ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
+      geom_point() +
+      facet_wrap(ncol = 1, ~year) +
+      coord_cartesian(ylim = c(38, 87), xlim = c(0,110000)) +
+      theme(legend.position = "bottom"
+
+    ```
+
+    ```{r}
+    my_gapminder_1960 %>%
+      filter(year <= "2000-01-01") %>%
+      ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
+      geom_point() +
+      facet_wrap(ncol = 1, ~year) +
+      coord_cartesian(ylim = c(38, 87), xlim = c(0,110000)) +
+      theme(legend.position = "bottom"
+    ```
+
+    ```{r}
+    my_gapminder_1960 %>%
+      filter(year <= "2019-01-01") %>%
+      ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
+      geom_point() +
+      facet_wrap(ncol = 1, ~year) +
+      coord_cartesian(ylim = c(38, 87), xlim = c(0,110000)) +
+      theme(legend.position = "bottom"
+    ```
 
 18. Do the same four plots as above, but now use the log transform of
     gdpPercap, i.e mapping.
+
+    ```{r}
+    my_gapminder_1960 %>%
+      filter(year <= "1960-01-01") %>%
+      ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+      geom_point() +
+      coord_cartesian(ylim = c(5, 12), xlim = c(30, 100)) +
+      theme(legend.position = "bottom"
+    ```
+
+    ```{r}
+    my_gapminder_1960 %>%
+      filter(year <= "1968-01-01") %>%
+      ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+      geom_point() +
+      coord_cartesian(ylim = c(5, 12), xlim = c(30, 100)) +
+      theme(legend.position = "bottom"
+    ```
+
+    ```{r}
+    my_gapminder_1960 %>%
+      filter(year <= "2000-01-01") %>%
+      ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+      geom_point() +
+      coord_cartesian(ylim = c(5, 12), xlim = c(30, 100)) +
+      theme(legend.position = "bottom"
+    ```
+
+    ```{r}
+    my_gapminder_1960 %>%
+      filter(year <= "2019-01-01") %>%
+      ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+      geom_point() +
+      coord_cartesian(ylim = c(5, 12), xlim = c(30, 100)) +
+      theme(legend.position = "bottom"
+    ```
 
 19. How will you characterise the development the 59 years from 1960 to
     2019?
