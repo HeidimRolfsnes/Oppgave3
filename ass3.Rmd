@@ -3,8 +3,6 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-<<<<<<< HEAD
-=======
 ```{r setup, echo = FALSE}
 suppressMessages(library(tidyverse))
 suppressMessages(library(tibble))
@@ -12,7 +10,7 @@ suppressMessages(library(gapminder))
 suppressMessages(library(readr))
 ```
 
->>>>>>> AE2
+
 1.  What information does the file ddf_concepts.csv contain?
 
     ```{r}
@@ -63,10 +61,8 @@ ddf_entities_geo_country
     ```
 
     ```{r}
-<<<<<<< HEAD
     g_c <- g_c %>%
       mutate(continent = case_when(
-=======
     spec(g_c)
 
     ```
@@ -98,7 +94,6 @@ ddf_entities_geo_country
     ```{r Continent}
     g_c <- g_c %>%
       mutate(continent = factor(case_when(
->>>>>>> AE2
         world_4region == "asia" & un_sdg_region %in%
     c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania",
         world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", 
