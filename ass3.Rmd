@@ -140,14 +140,10 @@ g_c %>%
     ```{r}
     lifeExp <- read_csv("Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints-life_expectancy_years-by-geo-time-csv"
     col_types = cols(time = col_date(format = "%Y")))
-<<<<<<< HEAD
     ```
 
 ```{r levetid}
 lifeExp <- lifeExp %>%
-=======
-  lifeExp <- lifeExp %>%
->>>>>>> origin/hm3
   rename(year = time)
   names(lifeExp)
   lenght(unique(lifeExp$geo))
@@ -239,30 +235,6 @@ rm(gdp_pc)
 names(g_c)
 ```
 
-
-<<<<<<< HEAD
-    1.  
-
-        ```{r}
-        t1 <- paste(c(seq(1800, 2015, by = 5), 2019), "01-01", sep = "-") %>%
-          parse_date(format = "%Y-%m-%d")
-
-        ```
-
-        ```{r}
-        g_c_5 <- g_c %>%
-          filter(year %in% t1) %>%
-          select(country, name, continent, year, lifeExp, pop, gdpPercap)
-        dim(g_c_5)
-        ```
-
-        ```{r}
-        g_c_gdpprc <- g_c_5 %>% 
-          group_by(gdpPercap) %>% 
-          summarise(min_year = min(year))
-        table(g_c_gdpprc$min_year)
-        ```
-=======
 ## 14. As in gapminder use data from every 5th year, but include 2019 at the end.
     
 ```{r}
@@ -295,8 +267,6 @@ g_c <- g_c %>%
     summarise(nr=n()) %>%
     arrange(country)
 ```
->>>>>>> origin/hm3
-
 
 ## 16. make a subset of gapminder, my_gapminder_1960, which include
     countries with data from 1960-2019. How many countries are now in
