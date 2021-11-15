@@ -1,6 +1,7 @@
 ---
 title: "R Notebook"
 output: html_notebook
+author: "Ann Elisabeth Jacobsen og Heidi Marie Rolfsnes""
 ---
 
 ```{r setup, echo = FALSE}
@@ -12,7 +13,6 @@ suppressMessages(library(readr))
 suppressMessages(library(knitr))
 suppressMessages(library(dplyr))
 options(scipen = 999)
-suppressPackageStartupMessages({library(tidyverse)
 ```
 
 1.  What information does the file ddf_concepts.csv contain?
@@ -53,7 +53,6 @@ er en egen region etter denne definisjonen.
 
     ```{r}
     ddf_entities_geo_country
-
     ```
 
     ```{r Oceania}
