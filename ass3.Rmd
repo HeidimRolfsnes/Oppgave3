@@ -22,8 +22,7 @@ file-pane og så velge import-dataset.
 Filen ddf_concepts.csv ser ut til å inneholde en kort beskrivelse av
 datasettene som finnes i mappen *countries-etc-datapoints*.
 
-## 2.  What information does the file ddf---entities--geo---country.csv
-    contain?
+## 2.  What information does the file ddf---entities--geo---country.csv contain?
 
 Beskrivelse av hvert enkelt land i datasettet slik som navn,
 forkortelse, verdensdel, geografiske koordinater, forkortelser etc.
@@ -55,8 +54,6 @@ er en egen region etter denne definisjonen.
 
     ```{r}
     ddf_entities_geo_country
-
-
     ```
 
 
