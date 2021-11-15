@@ -55,7 +55,7 @@ er en egen region etter denne definisjonen.
     Australia og New Zealand tilhører Oseanina.
 
     ```{r}
-    ddf_entities_geo_country
+  ddf_entities_geo_country
     ```
 
 ```{r}
@@ -293,7 +293,7 @@ g_c <- g_c %>%
 
     ```
 
-17. Use ggplot() and let x be gdpPercap, y be lifeExp and size the
+## 17. Use ggplot() and let x be gdpPercap, y be lifeExp and size the
     population. Make a plot for each of the year 1960, 1980, 2000
     and 2019.
 
