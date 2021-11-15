@@ -14,7 +14,7 @@ suppressMessages(library(dplyr))
 options(scipen = 999)
 ```
 
-1.  What information does the file ddf_concepts.csv contain?
+## 1.  What information does the file ddf_concepts.csv contain?
 
 Enkleste måten å få et overblikk over innholdet er å klikke på filen i
 file-pane og så velge import-dataset.
@@ -22,19 +22,19 @@ file-pane og så velge import-dataset.
 Filen ddf_concepts.csv ser ut til å inneholde en kort beskrivelse av
 datasettene som finnes i mappen *countries-etc-datapoints*.
 
-2.  What information does the file ddf---entities--geo---country.csv
+## 2.  What information does the file ddf---entities--geo---country.csv
     contain?
 
 Beskrivelse av hvert enkelt land i datasettet slik som navn,
 forkortelse, verdensdel, geografiske koordinater, forkortelser etc.
 
-3.  What information does the the file
+## 3.  What information does the the file
     ddg_entities--geo--un_sdg_region.csv contain?
 
 Gir oss ulike regioner definert av UN. Ser at Australia og New Zealand
 er en egen region etter denne definisjonen.
 
-4.  What variables does the gapminder dataset from the gapminder package
+## 4.  What variables does the gapminder dataset from the gapminder package
     contain? To what continent are Australia and New Zealand assigned?
 
 142 land
@@ -51,7 +51,7 @@ er en egen region etter denne definisjonen.
     gapminder
     ```
 
-5.  Recreate the continent variable in gapminder with the new data?
+## 5.  Recreate the continent variable in gapminder with the new data?
 
     ```{r}
     ddf_entities_geo_country
@@ -59,14 +59,12 @@ er en egen region etter denne definisjonen.
 
     ```
 
-    ```{r warning=TRUE}
+
     Må altså flytte Australia og New Zealand fra Asia til Osceania for å være på line med gapminder.
 
     land, kontinent, årstall for gjennomført innhenting av data, forventet levealder, innbyggertall, BNP.
     Australia og New Zealand tilhører Oseanina.
 
-    5.  Recreate the continent variable in gapminder with the new data?
-    ```
 
     ```{r}
     gapminder::gapminder %>% 
@@ -127,7 +125,7 @@ er en egen region etter denne definisjonen.
     
     
 
-6.  How many countries are there now? 
+## 6.  How many countries are there now? 
 
 ```{r Countries}
 g_c <- read.csv("data/ddf--entities--geo--country.csv")
@@ -139,7 +137,7 @@ lenght(unique(g_c$country))
 ```
 nå finner vi 247 land.
 
-6b) How many countries are there now in each continent?
+## 6b) How many countries are there now in each continent?
 
 ```{r}
 g_c %>%
@@ -148,7 +146,7 @@ g_c %>%
 ```
 
 
-7.  Create the variable Life Expectancy (lifeExp) in g_c from the file
+## 7.  Create the variable Life Expectancy (lifeExp) in g_c from the file
 
     ```{r}
     lifeExp <- read_csv("Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints-life_expectancy_years-by-geo-time-csv"
@@ -159,9 +157,9 @@ g_c %>%
   lenght(unique(lifeExp$geo))
 ```
 
-8.  How many countries have information about lifeExp?
+## 8.  How many countries have information about lifeExp?
 
-9.  reduce g_c to the variables: country, name, iso3166_1\_alpha3,
+## 9.  reduce g_c to the variables: country, name, iso3166_1\_alpha3,
     un_sdg_region, World_4region, continent, world_6region
 
     ```{r}
@@ -177,7 +175,7 @@ names(g_c)
 ```
 
 
-10. What is the first observation of lifeExp for the different
+## 10. What is the first observation of lifeExp for the different
     countries?
 
     ```{r}
@@ -189,7 +187,7 @@ names(g_c)
 
 De første opservasjonene er fra 1800.
 
-11. What are the name of the 9 countries that only have life expectancy
+## 11. What are the name of the 9 countries that only have life expectancy
     data from 1950?
 
 ```{r forventet levetid fra 1950}
@@ -201,7 +199,7 @@ tibble(country = unique(g_c_min@names))
 rm(g_c_min)
 ```
 
-12. Read in the total_population and join with g_c
+## 12. Read in the total_population and join with g_c
 
 ```{r folketall}
 pop <- read.csv("ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--population_total--by--geo--time.csv",
@@ -215,7 +213,7 @@ rm(pop)
 ```
 
 
-13. Read in the gdp_percapita_us_inflation_adjusted and call it "gdp_pc"
+## 13. Read in the gdp_percapita_us_inflation_adjusted and call it "gdp_pc"
 
     Rename life_expectancy_years to lifeExp, population_total to pop and
     gdppercapita_us_inflation_adjusted to gdpPercap
