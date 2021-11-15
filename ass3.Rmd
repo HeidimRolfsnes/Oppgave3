@@ -381,7 +381,5 @@ g_c <- g_c %>%
 
     Levetiden har økt betraktelig fra 1960 til 2019.
 
-20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
-
 ## 20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
 
