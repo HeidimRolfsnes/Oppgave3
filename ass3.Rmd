@@ -4,6 +4,7 @@ output: html_notebook
 ---
 
 ```{r setup, echo = FALSE}
+
 suppressMessages(library(tidyverse))
 suppressMessages(library(tibble))
 suppressMessages(library(gapminder))
@@ -11,32 +12,28 @@ suppressMessages(library(readr))
 suppressMessages(library(knitr))
 suppressMessages(library(dplyr))
 options(scipen = 999)
-```
+suppressPackageStartupMessages({library(tidyverse)
+````
 
 1.  What information does the file ddf_concepts.csv contain?
 
-    ```{r}
-    ddf_concepts
-    ```
+Enkleste måten å få et overblikk over innholdet er å klikke på filen i file-pane og så velge import-dataset.
 
-2.  What information does the file ddf---entities--geo---country.csv
-    contain?
+Filen ddf_concepts.csv ser ut til å inneholde en kort beskrivelse av datasettene som finnes i mappen *countries-etc-datapoints*.
 
-```{r}
-ddf_entities_geo_country
-```
+2.  What information does the file ddf---entities--geo---country.csv contain?
 
-3.  What information does the the file
-    ddg_entities--geo--un_sdg_region.csv contain?
+Beskrivelse av hvert enkelt land i datasettet slik som navn, forkortelse, verdensdel, geografiske koordinater, forkortelser etc.
 
-    ```{r land og kontinenter}
-    ddf_entities_geo_un_sdg_region
+3.  What information does the the file ddg_entities--geo--un_sdg_region.csv contain?
 
-    ```
+Gir oss ulike regioner definert av UN.
+Ser at Australia og New Zealand er en egen region etter denne definisjonen.
 
-4.  What variables does the gapminder dataset from the gapminder package
-    contain? To what continent are Australia and New Zealand assigned?
+4.  What variables does the gapminder dataset from the gapminder package contain?
+    To what continent are Australia and New Zealand assigned?
 
+<<<<<<< HEAD
     142 land
 
     5 kontinenter
@@ -60,12 +57,47 @@ ddf_entities_geo_country
     ```
 
     ```{r warning=TRUE}
+    Må altså flytte Australia og New Zealand fra Asia til Osceania for å være på line med gapminder.
+
+    land, kontinent, årstall for gjennomført innhenting av data, forventet levealder, innbyggertall, BNP.
+    Australia og New Zealand tilhører Oseanina.
+
+5.  Recreate the continent variable in gapminder with the new data?
+```
+
+    ```{r}
+    gapminder::gapminder %>% 
+      select(country:continent) %>% 
+      distinct() %>% 
+      arrange(continent, country) %>% 
+      View()
+    ```
+
+    Ser at Australia og New Zealand tilhører kontinentet Osceania i gapminder datasettet.
+
+    ```{r continent}
     g_c <- read_csv("data/ddf--entities--geo--country.csv")
-    print(g_c)
+    tmp <- g_c %>% 
+      mutate(
+        continent = case_when(
+          world_4region == "asia" ~ "Asia", 
+          world_4region == "africa" ~ "Afrika",
+          world_4region == "americas" ~ "Amerika",
+          world_4region == "europe" ~ "Europa"
+          )
+        ) %>% 
+      # fix Australia and New Zealand
+      filter(iso3166_1_alpha2 %in% c("AU", "NZ")) %>% 
+      mutate(
+        continent = "Oceania"
+      )
     ```
 
     ```{r}
     g_c <- read_csv("ddf--entities--geo--country.csv")
+    tmp %>% 
+      filter(continent == "Oceania") %>% 
+      select(country, continent)
     ```
 
     ```{r}
