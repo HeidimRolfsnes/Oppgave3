@@ -123,8 +123,6 @@ er en egen region etter denne definisjonen.
       )
     ```
     
-    
-
 ## 6.  How many countries are there now? 
 
 ```{r Countries}
