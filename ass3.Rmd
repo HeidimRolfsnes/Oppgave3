@@ -14,49 +14,49 @@ suppressMessages(library(dplyr))
 options(scipen = 999)
 ```
 
-## 1.  What information does the file ddf_concepts.csv contain?
+## 1. What information does the file ddf_concepts.csv contain?
 
 Filen ddf_concepts.csv ser ut til å inneholde en kort beskrivelse av
 datasettene som finnes i mappen *countries-etc-datapoints*.
 
-## 2.  What information does the file ddf---entities--geo---country.csv contain?
+## 2. What information does the file ddf---entities--geo---country.csv contain?
 
 Beskrivelse av hvert enkelt land i datasettet slik som navn,
 forkortelse, verdensdel, geografiske koordinater, forkortelser etc.
 
-## 3.  What information does the the file
-    ddg_entities--geo--un_sdg_region.csv contain?
+## 3. What information does the the file ddg_entities--geo--un_sdg_region.csv contain?
 
 Gir oss ulike regioner definert av FN. Ser at Australia og New Zealand
 er en egen region etter denne definisjonen.
 
-## 4.  What variables does the gapminder dataset from the gapminder package
-    contain? To what continent are Australia and New Zealand assigned?
+## 4. What variables does the gapminder dataset from the gapminder package contain? To what continent are Australia and New Zealand assigned?
 
-    142 land
 
-    5 kontinenter
+    #142 land
 
-    Årene 1957 til 2007
+    #5 kontinenter
 
-    Folketall (population)
+    #Årene 1957 til 2007
 
-    BnP per inbygger.
+    #Folketall (population)
+
+    #BnP per inbygger.
 
     ```{r Informasjon om utvalget}
     gapminder
     ```
 
-## 5.  Recreate the continent variable in gapminder with the new data?
+## 5. Recreate the continent variable in gapminder with the new data?
 
-  Må altså flytte Australia og New Zealand fra Asia til Osceania for å være på line med gapminder.
+Må altså flytte Australia og New Zealand fra Asia til Osceania for å
+være på line med gapminder.
 
     land, kontinent, årstall for gjennomført innhenting av data, forventet levealder, innbyggertall, BNP.
     Australia og New Zealand tilhører Oseanina.
 
-    ```{r}
+```{r}
   ddf_entities_geo_country
-    ```
+```
 
 ```{r}
   gapminder::gapminder %>% 
@@ -115,7 +115,7 @@ er en egen region etter denne definisjonen.
       )
     ```
 
-## 6.  How many countries are there now? 
+## 6. How many countries are there now?
 
 ```{r Countries}
 g_c <- read.csv("data/ddf--entities--geo--country.csv")
@@ -136,7 +136,7 @@ g_c %>%
   summarise(Countries= length(unique(country)))
 ```
 
-## 7.  Create the variable Life Expectancy (lifeExp) in g_c from the file
+## 7. Create the variable Life Expectancy (lifeExp) in g_c from the file
 
     ```{r}
     lifeExp <- read_csv("Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints-life_expectancy_years-by-geo-time-csv"
@@ -150,11 +150,11 @@ lifeExp <- lifeExp %>%
   lenght(unique(lifeExp$geo))
 ```
 
-## 8.  How many countries have information about lifeExp?
+## 8. How many countries have information about lifeExp?
 
     195 land har informasjon om levetid.
 
-## 9.  reduce g_c to the variables: country, name, iso3166_1\_alpha3,
+## 9. reduce g_c to the variables: country, name, iso3166_1\_alpha3,
 
     ```{r}
     g_c <- g_c %>%
@@ -180,6 +180,7 @@ names(g_c)
 De første opservasjonene er fra 1800.
 
 ## 11. What are the name of the 9 countries that only have life expectancy
+
     data from 1950?
 
 ```{r forventet levetid fra 1950}
@@ -294,6 +295,7 @@ g_c <- g_c %>%
     ```
 
 ## 17. Use ggplot() and let x be gdpPercap, y be lifeExp and size the
+
     population. Make a plot for each of the year 1960, 1980, 2000
     and 2019.
 
@@ -381,4 +383,3 @@ g_c <- g_c %>%
     Levetiden har økt betraktelig fra 1960 til 2019.
 
 ## 20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
-
