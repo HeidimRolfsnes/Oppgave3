@@ -375,11 +375,14 @@ print(g_c)</code></pre>
 <pre><code>```r
 lifeExp &lt;- read_csv(&quot;Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints-life_expectancy_years-by-geo-time-csv&quot;
 col_types = cols(time = col_date(format = &quot;%Y&quot;)))
-  lifeExp &lt;- lifeExp %&gt;%
-  rename(year = time)
-  names(lifeExp)
-  lenght(unique(lifeExp$geo))
 ```</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6IHVuZXhwZWN0ZWQgc3ltYm9sIGluOlxuXCIgICAgbGlmZUV4cCA8LSByZWFkX2NzdihcIkRhdGEvZGRmLS1nYXBtaW5kZXItLXN5c3RlbWFfZ2xvYmFsaXMvY291bnRyaWVzLWV0Yy1kYXRhcG9pbnRzL2RkZi0tZGF0YXBvaW50cy1saWZlX2V4cGVjdGFuY3lfeWVhcnMtYnktZ2VvLXRpbWUtY3N2XCJcbiAgICBjb2xfdHlwZXNcIlxuIn0= -->
+<pre><code>```
+Error: unexpected symbol in:
+&quot;    lifeExp &lt;- read_csv(&quot;Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints-life_expectancy_years-by-geo-time-csv&quot;
+    col_types&quot;
+```</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
