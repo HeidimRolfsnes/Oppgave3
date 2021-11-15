@@ -1,10 +1,10 @@
 ---
 title: "R Notebook"
 output: html_notebook
+author: "Ann Elisabeth Jacobsen og Heidi Marie Rolfsnes""
 ---
 
 ```{r setup, echo = FALSE}
-
 suppressMessages(library(tidyverse))
 suppressMessages(library(tibble))
 suppressMessages(library(gapminder))
@@ -15,9 +15,6 @@ options(scipen = 999)
 ```
 
 ## 1.  What information does the file ddf_concepts.csv contain?
-
-Enkleste måten å få et overblikk over innholdet er å klikke på filen i
-file-pane og så velge import-dataset.
 
 Filen ddf_concepts.csv ser ut til å inneholde en kort beskrivelse av
 datasettene som finnes i mappen *countries-etc-datapoints*.
@@ -30,13 +27,13 @@ forkortelse, verdensdel, geografiske koordinater, forkortelser etc.
 ## 3.  What information does the the file
     ddg_entities--geo--un_sdg_region.csv contain?
 
-Gir oss ulike regioner definert av UN. Ser at Australia og New Zealand
+Gir oss ulike regioner definert av FN. Ser at Australia og New Zealand
 er en egen region etter denne definisjonen.
 
 ## 4.  What variables does the gapminder dataset from the gapminder package
     contain? To what continent are Australia and New Zealand assigned?
 
-142 land
+    142 land
 
     5 kontinenter
 
@@ -46,30 +43,28 @@ er en egen region etter denne definisjonen.
 
     BnP per inbygger.
 
-    ```{r}
+    ```{r Informasjon om utvalget}
     gapminder
     ```
 
 ## 5.  Recreate the continent variable in gapminder with the new data?
 
-    ```{r}
-    ddf_entities_geo_country
-    ```
-
-
-    Må altså flytte Australia og New Zealand fra Asia til Osceania for å være på line med gapminder.
+  Må altså flytte Australia og New Zealand fra Asia til Osceania for å være på line med gapminder.
 
     land, kontinent, årstall for gjennomført innhenting av data, forventet levealder, innbyggertall, BNP.
     Australia og New Zealand tilhører Oseanina.
 
-
     ```{r}
-    gapminder::gapminder %>% 
+    ddf_entities_geo_country
+    ```
+
+```{r}
+  gapminder::gapminder %>% 
       select(country:continent) %>% 
       distinct() %>% 
       arrange(continent, country) %>% 
       View()
-    ```
+```
 
     Ser at Australia og New Zealand tilhører kontinentet Osceania i
     gapminder datasettet.
@@ -92,7 +87,7 @@ er en egen region etter denne definisjonen.
       )
     ```
 
-    ```{r}
+    ```{r Aus og Nzl flyttet}
     g_c <- read_csv("ddf--entities--geo--country.csv")
     tmp %>% 
       filter(continent == "Oceania") %>% 
@@ -119,7 +114,7 @@ er en egen region etter denne definisjonen.
         continent = "oceania"
       )
     ```
-    
+
 ## 6.  How many countries are there now? 
 
 ```{r Countries}
@@ -130,6 +125,7 @@ print(g_c)
 ```{r}
 lenght(unique(g_c$country))
 ```
+
 nå finner vi 247 land.
 
 ## 6b) How many countries are there now in each continent?
@@ -140,13 +136,15 @@ g_c %>%
   summarise(Countries= length(unique(country)))
 ```
 
-
 ## 7.  Create the variable Life Expectancy (lifeExp) in g_c from the file
 
     ```{r}
     lifeExp <- read_csv("Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints-life_expectancy_years-by-geo-time-csv"
     col_types = cols(time = col_date(format = "%Y")))
-  lifeExp <- lifeExp %>%
+    ```
+
+```{r levetid}
+lifeExp <- lifeExp %>%
   rename(year = time)
   names(lifeExp)
   lenght(unique(lifeExp$geo))
@@ -154,8 +152,9 @@ g_c %>%
 
 ## 8.  How many countries have information about lifeExp?
 
+    195 land har informasjon om levetid.
+
 ## 9.  reduce g_c to the variables: country, name, iso3166_1\_alpha3,
-    un_sdg_region, World_4region, continent, world_6region
 
     ```{r}
     g_c <- g_c %>%
@@ -169,11 +168,9 @@ g_c %>%
 names(g_c)
 ```
 
+## 10. What is the first observation of lifeExp for the different countries?
 
-## 10. What is the first observation of lifeExp for the different
-    countries?
-
-    ```{r}
+    ```{r levetid i ulike land}
     g_c_min <- g_c %>%
       group_by(country) %>%
       summarise(min_year = min(year))
@@ -207,7 +204,6 @@ g_c <- g_c %>%
 rm(pop)
 ```
 
-
 ## 13. Read in the gdp_percapita_us_inflation_adjusted and call it "gdp_pc"
 
     Rename life_expectancy_years to lifeExp, population_total to pop and
@@ -217,14 +213,13 @@ rm(pop)
     gdp_pc <- read_csv("ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--gdppercapita_us_inflation_adjusted--by--geo--time.csv",
                        col_types = cols(time = col_date(format = "%Y")))
     ```
-    
-    
+
 ```{r}
  g_c <- g_c %>%
       left_join(gdp_pc, by = c("country" = "geo", "year" = "time"))
 rm(gdp_pc)
 ```
-    
+
     ```{r nye navn}
     g_c <- g_c %>%
       rename(lifeExp = life_expectancy_years, 
@@ -236,14 +231,13 @@ rm(gdp_pc)
 names(g_c)
 ```
 
-
 ## 14. As in gapminder use data from every 5th year, but include 2019 at the end.
-    
+
 ```{r}
 t1 <- paste(c(seq(1800,2015, by = 5), 2019), "01-01", sep = "-") %>%
   parse_date(format = "%Y-%m-%d")
 ```
-    
+
 ```{r}
 g_c_5 <- g_c %>%
   filter(year %in% t1) %>%
@@ -258,8 +252,6 @@ g_c_gdpprc <- g_c_5 %>%
 table(g_c_gdpprc$min_year)
 ```
 
-
-
 ## 15. Make a vector containing the names of the countries with the longest time series for gdp per capita
 
 ```{r}
@@ -270,8 +262,8 @@ g_c <- g_c %>%
     arrange(country)
 ```
 
-
 ## 16. make a subset of gapminder, my_gapminder_1960, which include
+
     countries with data from 1960-2019. How many countries are now in
     the dataset? How many countries from each continent? how many NAs
     are there in my_gapminder_1960
@@ -386,4 +378,7 @@ g_c <- g_c %>%
 
 ## 19. How will you characterise the development the 59 years from 1960 to 2019?
 
+    Levetiden har økt betraktelig fra 1960 til 2019.
+
 ## 20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
+
