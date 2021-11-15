@@ -346,8 +346,7 @@ g_c <- g_c %>%
       theme(legend.position = "bottom"
     ```
 
-18. Do the same four plots as above, but now use the log transform of
-    gdpPercap, i.e mapping.
+## 18. Do the same four plots as above, but now use the log transform of gdpPercap, i.e mapping.
 
     ```{r}
     my_gapminder_1960 %>%
