@@ -12,7 +12,6 @@ suppressMessages(library(readr))
 suppressMessages(library(knitr))
 suppressMessages(library(dplyr))
 options(scipen = 999)
-suppressPackageStartupMessages({library(tidyverse)
 ```
 
 1.  What information does the file ddf_concepts.csv contain?
@@ -106,51 +105,58 @@ er en egen region etter denne definisjonen.
     ```
 
     ```{r}
-    g_c <- g_c %>%
-      mutate(continent = case_when(
     spec(g_c)
-
     ```
 
     ```{r Continent}
-    g_c <- g_c %>%
-      mutate(continent = (case_when(
-        world_4region == "asia" & un_sdg_region %in%
-    c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "oceania",
-        world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", 
-    "un_oceania_exc_australia_and_new_zealand")) ~"asia", 
-        world_4region == "africa" ~"Afrika",
-        world_4region == "americas" ^"Amerika",
-        world_4region == "europe" ~"Europa")
-    ) %>%
-      filter(!is.na(iso3166_1_alpha3))
+    g_c <- read_csv("data/dff--entities--geo--country.csv")
+    tmp <- g_c %>%
+      mutate(
+        continent = (case_when(
+          world_4region == "asia" ~ "Asia",
+          world_4region == "africa" ~ "Afrika",
+          world_4region == "americas" ~ "Amerika",
+          world_4region == "europe" ~ "Europa")
+          ) 
+        ) %>%
+      filter(iso3166_1_alpha2 %in% c("AU","NZ")) %>%
+      mutate(
+        continent = "oceania"
+      )
     ```
+    
+    
 
-6.  How many countries are there now?
+6.  How many countries are there now? 
 
 ```{r Countries}
 g_c <- read.csv("data/ddf--entities--geo--country.csv")
 print(g_c)
 ```
 
+```{r}
+lenght(unique(g_c$country))
+```
+nå finner vi 247 land.
+
 6b) How many countries are there now in each continent?
 
 ```{r}
 g_c %>%
   group_by(continent) %>%
-  count()
+  summarise(Countries= length(unique(country)))
 ```
+
 
 7.  Create the variable Life Expectancy (lifeExp) in g_c from the file
 
     ```{r}
     lifeExp <- read_csv("Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints-life_expectancy_years-by-geo-time-csv"
     col_types = cols(time = col_date(format = "%Y")))
-    ```
-
-```{r}
-lifeExp <- lifeExp %>%
+  lifeExp <- lifeExp %>%
   rename(year = time)
+  names(lifeExp)
+  lenght(unique(lifeExp$geo))
 ```
 
 8.  How many countries have information about lifeExp?
@@ -160,11 +166,16 @@ lifeExp <- lifeExp %>%
 
     ```{r}
     g_c <- g_c %>%
-      select(country,name, iso3166_1_alpha3, main_religion_2008, un_sdg_region, world_4region, continent, world_6region)
+      select(country,name, iso3166_1_alpha3, main_religion_2008, un_sdg_region, world_4region, continent, world_6region) %>%
     left_join(lifeExp, by = c("country" = "geo")) %>%
       filter(!(is.na(year) & is.na(life-expectancy_years))) %>%
       filter(year < "2020-01-01")
     ```
+
+```{r}
+names(g_c)
+```
+
 
 10. What is the first observation of lifeExp for the different
     countries?
@@ -172,16 +183,37 @@ lifeExp <- lifeExp %>%
     ```{r}
     g_c_min <- g_c %>%
       group_by(country) %>%
-      summarise(year_min = min(year)) %>%
-      arrange(desc(year_min))
-
-
+      summarise(min_year = min(year))
+      table(g_c_min$min_year)
     ```
+
+De første opservasjonene er fra 1800.
 
 11. What are the name of the 9 countries that only have life expectancy
     data from 1950?
 
+```{r forventet levetid fra 1950}
+g_c_min <- g_c_min %>%
+  left_join(g_c,
+            by="country") %>%
+  filter(min_year == "1950-01-01")
+tibble(country = unique(g_c_min@names))
+rm(g_c_min)
+```
+
 12. Read in the total_population and join with g_c
+
+```{r folketall}
+pop <- read.csv("ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--population_total--by--geo--time.csv",
+                col_types =cols(time=col_date(format = "%Y")))
+```
+
+```{r}
+g_c <- g_c %>%
+  left_join(pop, by = c("country" = "geo", "year" = "time"))
+rm(pop)
+```
+
 
 13. Read in the gdp_percapita_us_inflation_adjusted and call it "gdp_pc"
 
@@ -189,31 +221,64 @@ lifeExp <- lifeExp %>%
     gdppercapita_us_inflation_adjusted to gdpPercap
 
     ```{r}
-    gdp_pc <- read_csv("Data/ddf--gapminder--systema_globalis/countries-etc-datapoints/ddf--datapoints--gdp"(
+    gdp_pc <- read_csv("ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--gdppercapita_us_inflation_adjusted--by--geo--time.csv",
                        col_types = cols(time = col_date(format = "%Y")))
-                       
-    g_c <- g_c %>%
-      left_join(u_pop, by = c("country" = "geo", "year" = "time"))
     ```
-
-    ```{r}
+    
+    
+```{r}
+ g_c <- g_c %>%
+      left_join(gdp_pc, by = c("country" = "geo", "year" = "time"))
+rm(gdp_pc)
+```
+    
+    ```{r nye navn}
     g_c <- g_c %>%
       rename(lifeExp = life_expectancy_years, 
              pop = population_total, 
              gdpPercap = gdppercapita_us_inflation_adjusted)
     ```
 
-14. As in gapminder use data from every 5th year, but include 2019 at
-    the end
+```{r navn}
+names(g_c)
+```
 
-    ```{r}
-    dim(g_c_5)
-    ```
 
-15. Make a vector containing the names of the countries with the longest
-    time series for gdp per capita
+## 14. As in gapminder use data from every 5th year, but include 2019 at the end.
+    
+```{r}
+t1 <- paste(c(seq(1800,2015, by = 5), 2019), "01-01", sep = "-") %>%
+  parse_date(format = "%Y-%m-%d")
+```
+    
+```{r}
+g_c_5 <- g_c %>%
+  filter(year %in% t1) %>%
+  select(country, name, continent, year, lifeExp, pop, gdpPercap)
+dim(g_c_5)
+```
 
-16. make a subset of gapminder, my_gapminder_1960, which include
+```{r}
+g_c_gdpprc <- g_c_5 %>%
+  group_by(gdpPercap) %>%
+  summarise(min_year = min(year))
+table(g_c_gdpprc$min_year)
+```
+
+
+
+## 15. Make a vector containing the names of the countries with the longest time series for gdp per capita
+
+```{r}
+g_c <- g_c %>%
+  filter(!is.na(gdpPercap)) %>%
+  group_by(country) %>%
+    summarise(nr=n()) %>%
+    arrange(country)
+```
+
+
+## 16. make a subset of gapminder, my_gapminder_1960, which include
     countries with data from 1960-2019. How many countries are now in
     the dataset? How many countries from each continent? how many NAs
     are there in my_gapminder_1960
