@@ -385,7 +385,6 @@ g_c <- g_c %>%
       theme(legend.position = "bottom"
     ```
 
-19. How will you characterise the development the 59 years from 1960 to
-    2019?
+## 19. How will you characterise the development the 59 years from 1960 to 2019?
 
-20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
+## 20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
