@@ -215,73 +215,75 @@ pre code {
 
 
 <!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <ol style="list-style-type: decimal">
 <li>What information does the file ddf_concepts.csv contain?</li>
 </ol>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<pre><code>```r
-ddf_concepts
-```</code></pre>
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
+<p>Enkleste måten å få et overblikk over innholdet er å klikke på filen i file-pane og så velge import-dataset.</p>
+<p>Filen ddf_concepts.csv ser ut til å inneholde en kort beskrivelse av datasettene som finnes i mappen <em>countries-etc-datapoints</em>.</p>
 <ol start="2" style="list-style-type: decimal">
 <li>What information does the file ddf—entities–geo—country.csv contain?</li>
 </ol>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGRmX2VudGl0aWVzX2dlb19jb3VudHJ5XG5gYGAifQ== -->
-<pre class="r"><code>ddf_entities_geo_country</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
+<p>Beskrivelse av hvert enkelt land i datasettet slik som navn, forkortelse, verdensdel, geografiske koordinater, forkortelser etc.</p>
 <ol start="3" style="list-style-type: decimal">
 <li>What information does the the file ddg_entities–geo–un_sdg_region.csv contain?</li>
 </ol>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<pre><code>```r
-ddf_entities_geo_un_sdg_region
-
-```</code></pre>
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
+<p>Gir oss ulike regioner definert av UN. Ser at Australia og New Zealand er en egen region etter denne definisjonen.</p>
 <ol start="4" style="list-style-type: decimal">
 <li><p>What variables does the gapminder dataset from the gapminder package contain? To what continent are Australia and New Zealand assigned?</p>
-<p>land, kontinent, årstall for gjennomført innhenting av data, forventet levealder, innbyggertall, BNP. Australia og New zealand tilhører oseanina.</p></li>
+<p>Må altså flytte Australia og New Zealand fra Asia til Osceania for å være på line med gapminder.</p>
+<p>land, kontinent, årstall for gjennomført innhenting av data, forventet levealder, innbyggertall, BNP. Australia og New Zealand tilhører Oseanina.</p></li>
+<li><p>Recreate the continent variable in gapminder with the new data?</p></li>
 </ol>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <pre><code>```r
-gapminder
+gapminder::gapminder %&gt;% 
+  select(country:continent) %&gt;% 
+  distinct() %&gt;% 
+  group_by(continent) %&gt;% 
+  table(country)
 ```</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gdGFibGUoLiwgY291bnRyeSkgOiBvYmplY3QgJ2NvdW50cnknIG5vdCBmb3VuZFxuIn0= -->
+<pre><code>```
+Error in table(., country) : object &#39;country&#39; not found
+```</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<ol start="5" style="list-style-type: decimal">
-<li></li>
-<li>Recreate the continent variable in gapminder with the new data?</li>
-</ol>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<pre><code>```r
-ddf_entities_geo_country
-
-```</code></pre>
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
+<pre><code>Ser at Australia og New Zealand tilhører kontinentet Osceania i gapminder datasettet.</code></pre>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <pre><code>```r
 g_c &lt;- read_csv(&quot;data/ddf--entities--geo--country.csv&quot;)
-print(g_c)
 ```</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMjczIENvbHVtbnM6IDIyXG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5EZWxpbWl0ZXI6IFwiLFwiXG5jaHIgKDE3KTogY291bnRyeSwgZzc3X2FuZF9vZWNkX2NvdW50cmllcywgaW5jb21lXzNncm91cHMsIGluY29tZV9ncm91cHMsIGlzbzMxNjZfMV9hbHBoYTIsIGlzbzMxNjZfMV9hbHBoYTMsIGlzbzMxNjZfMiwgbGFuZGxvY2suLi5cbmRibCAgKDMpOiBpc28zMTY2XzFfbnVtZXJpYywgbGF0aXR1ZGUsIGxvbmdpdHVkZVxubGdsICAoMik6IGlzLS1jb3VudHJ5LCB1bl9zdGF0ZVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
+<pre><code>```
+Rows: 273 Columns: 22
+── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (17): country, g77_and_oecd_countries, income_3groups, income_groups, iso3166_1_alpha2, iso3166_1_alpha3, iso3166_2, landlock...
+dbl  (3): iso3166_1_numeric, latitude, longitude
+lgl  (2): is--country, un_state
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<pre><code>```r
-spec(g_c)
-```</code></pre>
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MiwibmNvbCI6Miwic3VtbWFyeSI6eyJBIHRpYmJsZSI6WyIyIMOXIDIiXX19LCJyZGYiOiJINHNJQUFBQUFBQUFBMTFReTI3Q01CRGNQQXhLSktBUzM1RmM2S0VmVVBWYUNSV0o2OWE0YlZTelJvNmp0cHo2NVlSMXNBL1lCM3QyMWpQcjhmWjV2Nm4zTlFBVVVHWVpGSUloaU4zYlMvTUVVT1pjWkZCQzVjOWZ2clJtNE1tSDZidzFDaHo2Q09tc2srNzhWU3FrRHRQeTNsd1FIbFdmU3FVWnlObS9VRmJTa090SWtVdkVsVFUvYlRSWWVJTi8zc1p4dktSVHBNWStUb2xrZlVDSDdZZGxQVmVwWkc1T3JqUEVvdHhuRjRrNHN3bXhHc2kvNU5ESXI0RyttMGMvWUdyZjFpTGcvQjc3a2ZrWXJFU3dtaW42NUxqeDdScmZsUTdGa2hOUGdkdVQ3ZmcvUWhKbSs5WVpoL0ZlTFkyT3pKUU5MbGVnRVovSzhnRUFBQT09In0= -->
+<pre><code>&lt;div data-pagedtable=&quot;false&quot;&gt;
+  &lt;script data-pagedtable-source type=&quot;application/json&quot;&gt;
+{&quot;columns&quot;:[{&quot;label&quot;:[&quot;country&quot;],&quot;name&quot;:[1],&quot;type&quot;:[&quot;chr&quot;],&quot;align&quot;:[&quot;left&quot;]},{&quot;label&quot;:[&quot;continent&quot;],&quot;name&quot;:[2],&quot;type&quot;:[&quot;chr&quot;],&quot;align&quot;:[&quot;left&quot;]}],&quot;data&quot;:[{&quot;1&quot;:&quot;aus&quot;,&quot;2&quot;:&quot;Oceania&quot;},{&quot;1&quot;:&quot;nzl&quot;,&quot;2&quot;:&quot;Oceania&quot;}],&quot;options&quot;:{&quot;columns&quot;:{&quot;min&quot;:{},&quot;max&quot;:[10],&quot;total&quot;:[2]},&quot;rows&quot;:{&quot;min&quot;:[10],&quot;max&quot;:[10],&quot;total&quot;:[2]},&quot;pages&quot;:{}}}
+  &lt;/script&gt;
+&lt;/div&gt;</code></pre>
+<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -301,7 +303,7 @@ c(&quot;un_australia_and_new_zealand&quot;,&quot;un_oceania_exc_australia_and_ne
 ```</code></pre>
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<ol start="7" style="list-style-type: decimal">
+<ol start="6" style="list-style-type: decimal">
 <li>How many countries are there now?</li>
 </ol>
 <!-- rnb-text-end -->
@@ -318,7 +320,7 @@ print(g_c)</code></pre>
 <p>task</p>
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKCgoxLiAgV2hhdCBpbmZvcm1hdGlvbiBkb2VzIHRoZSBmaWxlIGRkZl9jb25jZXB0cy5jc3YgY29udGFpbj8KCiAgICBgYGB7cn0KICAgIGRkZl9jb25jZXB0cwogICAgYGBgCgoyLiAgV2hhdCBpbmZvcm1hdGlvbiBkb2VzIHRoZSBmaWxlIGRkZi0tLWVudGl0aWVzLS1nZW8tLS1jb3VudHJ5LmNzdgogICAgY29udGFpbj8KCmBgYHtyfQpkZGZfZW50aXRpZXNfZ2VvX2NvdW50cnkKYGBgCgozLiAgV2hhdCBpbmZvcm1hdGlvbiBkb2VzIHRoZSB0aGUgZmlsZQogICAgZGRnX2VudGl0aWVzLS1nZW8tLXVuX3NkZ19yZWdpb24uY3N2IGNvbnRhaW4/CgogICAgYGBge3IgbGFuZCBvZyBrb250aW5lbnRlcn0KICAgIGRkZl9lbnRpdGllc19nZW9fdW5fc2RnX3JlZ2lvbgoKICAgIGBgYAoKNC4gIFdoYXQgdmFyaWFibGVzIGRvZXMgdGhlIGdhcG1pbmRlciBkYXRhc2V0IGZyb20gdGhlIGdhcG1pbmRlciBwYWNrYWdlCiAgICBjb250YWluPyBUbyB3aGF0IGNvbnRpbmVudCBhcmUgQXVzdHJhbGlhIGFuZCBOZXcgWmVhbGFuZCBhc3NpZ25lZD8KCiAgICBsYW5kLCBrb250aW5lbnQsIMOlcnN0YWxsIGZvciBnamVubm9tZsO4cnQgaW5uaGVudGluZyBhdiBkYXRhLAogICAgZm9ydmVudGV0IGxldmVhbGRlciwgaW5uYnlnZ2VydGFsbCwgQk5QLiBBdXN0cmFsaWEgb2cgTmV3IHplYWxhbmQKICAgIHRpbGjDuHJlciBvc2VhbmluYS4KCgogICAgYGBge3J9CiAgICBnYXBtaW5kZXIKICAgIGBgYAoKNS4gIAoKNi4gIFJlY3JlYXRlIHRoZSBjb250aW5lbnQgdmFyaWFibGUgaW4gZ2FwbWluZGVyIHdpdGggdGhlIG5ldyBkYXRhPwoKICAgIGBgYHtyfQogICAgZGRmX2VudGl0aWVzX2dlb19jb3VudHJ5CgogICAgYGBgCgogICAgYGBge3IgY29udGluZW50fQogICAgZ19jIDwtIHJlYWRfY3N2KCJkYXRhL2RkZi0tZW50aXRpZXMtLWdlby0tY291bnRyeS5jc3YiKQogICAgcHJpbnQoZ19jKQogICAgYGBgCgogICAgYGBge3J9CiAgICBzcGVjKGdfYykKICAgIGBgYAoKICAgIGBgYHtyfQogICAgZ19jIDwtIGdfYyU+JQogICAgICBtdXRhdGUoY29udGluZW50ID0gY2FzZV93aGVuKAogICAgICAgIHdvcmxkXzRyZWdpb24gPT0gImFzaWEiICYgdW5fc2RnX3JlZ2lvbiAlaW4lCiAgICBjKCJ1bl9hdXN0cmFsaWFfYW5kX25ld196ZWFsYW5kIiwidW5fb2NlYW5pYV9leGNfYXVzdHJhbGlhX2FuZF9uZXdfemVhbGFuZCIpIH4gIm9jZWFuaWEiLAogICAgICAgIHdvcmxkXzRyZWdpb24gPT0gImFzaWEiICYgISh1bl9zZGdfcmVnaW9uICVpbiUgYygidW5fYXVzdHJhbGlhX2FuZF9uZXdfemVhbGFuZCIsIAogICAgInVuX29jZWFuaWFfZXhjX2F1c3RyYWxpYV9hbmRfbmV3X3plYWxhbmQiKSkgfiJhc2lhIiwgCiAgICAgICAgd29ybGRfNHJlZ2lvbiA9PSAiYWZyaWNhIiB+IkFmcmlrYSIsCiAgICAgICAgd29ybGRfNHJlZ2lvbiA9PSAiYW1lcmljYXMiIF4iQW1lcmlrYSIsCiAgICAgICAgd29ybGRfNHJlZ2lvbiA9PSAiZXVyb3BlIiB+IkV1cm9wYSIpCiAgICApICU+JQogICAgICBmaWx0ZXIoIWlzLm5hKGlzbzMxNjZfMV9hbHBoYTMpKQogICAgYGBgCgo3LiAgSG93IG1hbnkgY291bnRyaWVzIGFyZSB0aGVyZSBub3c/CgpgYGB7cn0KZ19jIDwtIHJlYWQuY3N2KCJkYXRhL2RkZi0tZW50aXRpZXMtLWdlby0tY291bnRyeS5jc3YiKQpwcmludChnX2MpCmBgYAoKOC4gIEhvdyBtYW55IGNvbnV0cmllcyBhcmUgdGhlcmUgbm93IGluIGVhY2ggY29udGluZW50PwoKdGFzawo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3Igc2V0dXAsIGVjaG8gPSBGQUxTRX0Kc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKHsKICBsaWJyYXJ5KHRpZHl2ZXJzZSkKfSkKYGBgCgoxLiAgV2hhdCBpbmZvcm1hdGlvbiBkb2VzIHRoZSBmaWxlIGRkZl9jb25jZXB0cy5jc3YgY29udGFpbj8KCkVua2xlc3RlIG3DpXRlbiDDpSBmw6UgZXQgb3ZlcmJsaWtrIG92ZXIgaW5uaG9sZGV0IGVyIMOlIGtsaWtrZSBww6UgZmlsZW4gaSBmaWxlLXBhbmUgb2cgc8OlIHZlbGdlIGltcG9ydC1kYXRhc2V0LgoKRmlsZW4gZGRmX2NvbmNlcHRzLmNzdiBzZXIgdXQgdGlsIMOlIGlubmVob2xkZSBlbiBrb3J0IGJlc2tyaXZlbHNlIGF2IGRhdGFzZXR0ZW5lIHNvbSBmaW5uZXMgaSBtYXBwZW4gKmNvdW50cmllcy1ldGMtZGF0YXBvaW50cyouCgoyLiAgV2hhdCBpbmZvcm1hdGlvbiBkb2VzIHRoZSBmaWxlIGRkZi0tLWVudGl0aWVzLS1nZW8tLS1jb3VudHJ5LmNzdiBjb250YWluPwoKQmVza3JpdmVsc2UgYXYgaHZlcnQgZW5rZWx0IGxhbmQgaSBkYXRhc2V0dGV0IHNsaWsgc29tIG5hdm4sIGZvcmtvcnRlbHNlLCB2ZXJkZW5zZGVsLCBnZW9ncmFmaXNrZSBrb29yZGluYXRlciwgZm9ya29ydGVsc2VyIGV0Yy4KCjMuICBXaGF0IGluZm9ybWF0aW9uIGRvZXMgdGhlIHRoZSBmaWxlIGRkZ19lbnRpdGllcy0tZ2VvLS11bl9zZGdfcmVnaW9uLmNzdiBjb250YWluPwoKR2lyIG9zcyB1bGlrZSByZWdpb25lciBkZWZpbmVydCBhdiBVTi4KU2VyIGF0IEF1c3RyYWxpYSBvZyBOZXcgWmVhbGFuZCBlciBlbiBlZ2VuIHJlZ2lvbiBldHRlciBkZW5uZSBkZWZpbmlzam9uZW4uCgo0LiAgV2hhdCB2YXJpYWJsZXMgZG9lcyB0aGUgZ2FwbWluZGVyIGRhdGFzZXQgZnJvbSB0aGUgZ2FwbWluZGVyIHBhY2thZ2UgY29udGFpbj8KICAgIFRvIHdoYXQgY29udGluZW50IGFyZSBBdXN0cmFsaWEgYW5kIE5ldyBaZWFsYW5kIGFzc2lnbmVkPwoKICAgIE3DpSBhbHRzw6UgZmx5dHRlIEF1c3RyYWxpYSBvZyBOZXcgWmVhbGFuZCBmcmEgQXNpYSB0aWwgT3NjZWFuaWEgZm9yIMOlIHbDpnJlIHDDpSBsaW5lIG1lZCBnYXBtaW5kZXIuCgogICAgbGFuZCwga29udGluZW50LCDDpXJzdGFsbCBmb3IgZ2plbm5vbWbDuHJ0IGlubmhlbnRpbmcgYXYgZGF0YSwgZm9ydmVudGV0IGxldmVhbGRlciwgaW5uYnlnZ2VydGFsbCwgQk5QLgogICAgQXVzdHJhbGlhIG9nIE5ldyBaZWFsYW5kIHRpbGjDuHJlciBPc2VhbmluYS4KCjUuICBSZWNyZWF0ZSB0aGUgY29udGluZW50IHZhcmlhYmxlIGluIGdhcG1pbmRlciB3aXRoIHRoZSBuZXcgZGF0YT8KCiAgICBgYGB7cn0KICAgIGdhcG1pbmRlcjo6Z2FwbWluZGVyICU+JSAKICAgICAgc2VsZWN0KGNvdW50cnk6Y29udGluZW50KSAlPiUgCiAgICAgIGRpc3RpbmN0KCkgJT4lIAogICAgICBhcnJhbmdlKGNvbnRpbmVudCwgY291bnRyeSkgJT4lIAogICAgICBWaWV3KCkKICAgIGBgYAoKICAgIFNlciBhdCBBdXN0cmFsaWEgb2cgTmV3IFplYWxhbmQgdGlsaMO4cmVyIGtvbnRpbmVudGV0IE9zY2VhbmlhIGkgZ2FwbWluZGVyIGRhdGFzZXR0ZXQuCgogICAgYGBge3IgY29udGluZW50fQogICAgZ19jIDwtIHJlYWRfY3N2KCJkYXRhL2RkZi0tZW50aXRpZXMtLWdlby0tY291bnRyeS5jc3YiKQogICAgdG1wIDwtIGdfYyAlPiUgCiAgICAgIG11dGF0ZSgKICAgICAgICBjb250aW5lbnQgPSBjYXNlX3doZW4oCiAgICAgICAgICB3b3JsZF80cmVnaW9uID09ICJhc2lhIiB+ICJBc2lhIiwgCiAgICAgICAgICB3b3JsZF80cmVnaW9uID09ICJhZnJpY2EiIH4gIkFmcmlrYSIsCiAgICAgICAgICB3b3JsZF80cmVnaW9uID09ICJhbWVyaWNhcyIgfiAiQW1lcmlrYSIsCiAgICAgICAgICB3b3JsZF80cmVnaW9uID09ICJldXJvcGUiIH4gIkV1cm9wYSIKICAgICAgICAgICkKICAgICAgICApICU+JSAKICAgICAgIyBmaXggQXVzdHJhbGlhIGFuZCBOZXcgWmVhbGFuZAogICAgICBmaWx0ZXIoaXNvMzE2Nl8xX2FscGhhMiAlaW4lIGMoIkFVIiwgIk5aIikpICU+JSAKICAgICAgbXV0YXRlKAogICAgICAgIGNvbnRpbmVudCA9ICJPY2VhbmlhIgogICAgICApCiAgICBgYGAKCiAgICBgYGB7cn0KICAgIHRtcCAlPiUgCiAgICAgIGZpbHRlcihjb250aW5lbnQgPT0gIk9jZWFuaWEiKSAlPiUgCiAgICAgIHNlbGVjdChjb3VudHJ5LCBjb250aW5lbnQpCiAgICBgYGAKCiAgICBgYGB7cn0KICAgIGdfYyA8LSBnX2MlPiUKICAgICAgbXV0YXRlKGNvbnRpbmVudCA9IGNhc2Vfd2hlbigKICAgICAgICB3b3JsZF80cmVnaW9uID09ICJhc2lhIiAmIHVuX3NkZ19yZWdpb24gJWluJQogICAgYygidW5fYXVzdHJhbGlhX2FuZF9uZXdfemVhbGFuZCIsInVuX29jZWFuaWFfZXhjX2F1c3RyYWxpYV9hbmRfbmV3X3plYWxhbmQiKSB+ICJvY2VhbmlhIiwKICAgICAgICB3b3JsZF80cmVnaW9uID09ICJhc2lhIiAmICEodW5fc2RnX3JlZ2lvbiAlaW4lIGMoInVuX2F1c3RyYWxpYV9hbmRfbmV3X3plYWxhbmQiLCAKICAgICJ1bl9vY2VhbmlhX2V4Y19hdXN0cmFsaWFfYW5kX25ld196ZWFsYW5kIikpIH4iYXNpYSIsIAogICAgICAgIHdvcmxkXzRyZWdpb24gPT0gImFmcmljYSIgfiJBZnJpa2EiLAogICAgICAgIHdvcmxkXzRyZWdpb24gPT0gImFtZXJpY2FzIiBeIkFtZXJpa2EiLAogICAgICAgIHdvcmxkXzRyZWdpb24gPT0gImV1cm9wZSIgfiJFdXJvcGEiKQogICAgKSAlPiUKICAgICAgZmlsdGVyKCFpcy5uYShpc28zMTY2XzFfYWxwaGEzKSkKICAgIGBgYAoKNi4gIEhvdyBtYW55IGNvdW50cmllcyBhcmUgdGhlcmUgbm93PwoKYGBge3J9CmdfYyA8LSByZWFkLmNzdigiZGF0YS9kZGYtLWVudGl0aWVzLS1nZW8tLWNvdW50cnkuY3N2IikKcHJpbnQoZ19jKQpgYGAKCjguICBIb3cgbWFueSBjb251dHJpZXMgYXJlIHRoZXJlIG5vdyBpbiBlYWNoIGNvbnRpbmVudD8KCnRhc2sK</div>
 
 
 
