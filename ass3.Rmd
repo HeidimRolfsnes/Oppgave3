@@ -351,7 +351,7 @@ g_c <- g_c %>%
 
     ```{r}
     my_gapminder_1960 %>%
-      filter(year <= "1968-01-01") %>%
+      filter(year <= "1980-01-01") %>%
       ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       coord_cartesian(ylim = c(5, 12), xlim = c(30, 100)) +
