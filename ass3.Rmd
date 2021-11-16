@@ -1,6 +1,7 @@
 ---
 title: "R Notebook"
 author: "Ann Elisabeth Jacobsen og Heidi Marie Rolfsnes"
+lang: nb-NO
 ---
 
 ```{r setup, echo = FALSE}
