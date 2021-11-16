@@ -1,7 +1,6 @@
 ---
 title: "R Notebook"
-output: html_notebook
-author: "Ann Elisabeth Jacobsen og Heidi Marie Rolfsnes""
+author: "Ann Elisabeth Jacobsen og Heidi Marie Rolfsnes"
 ---
 
 ```{r setup, echo = FALSE}
@@ -16,7 +15,7 @@ options(scipen = 999)
 
 ## 1. What information does the file ddf_concepts.csv contain?
 
-Filen ddf_concepts.csv ser ut til å inneholde en kort beskrivelse av
+Filen ddf--concepts.csv ser ut til å inneholde en kort beskrivelse av
 datasettene som finnes i mappen *countries-etc-datapoints*.
 
 ## 2. What information does the file ddf---entities--geo---country.csv contain?
@@ -55,7 +54,8 @@ være på line med gapminder.
     Australia og New Zealand tilhører Oseanina.
 
 ```{r}
-  ddf_entities_geo_country
+ddf_entities_geo_country <- read_csv("data/ddf--entities--geo--country.csv")
+View(ddf_entities_geo_country)
 ```
 
 ```{r}
@@ -71,6 +71,7 @@ være på line med gapminder.
 
     ```{r continent}
     g_c <- read_csv("data/ddf--entities--geo--country.csv")
+    View(ddf_entities_geo_country)
     tmp <- g_c %>% 
       mutate(
         continent = case_when(
@@ -99,7 +100,7 @@ være på line med gapminder.
     ```
 
     ```{r Continent}
-    g_c <- read_csv("data/dff--entities--geo--country.csv")
+    g_c <- read_csv("data/ddf--entities--geo--country.csv")
     tmp <- g_c %>%
       mutate(
         continent = (case_when(
@@ -316,7 +317,7 @@ g_c <- g_c %>%
       geom_point() +
       facet_wrap(ncol = 1, ~year) +
       coord_cartesian(ylim = c(38, 87), xlim = c(0,110000)) +
-      theme(legend.position = "bottom"
+      theme(legend.position = "bottom")
 
     ```
 
@@ -327,7 +328,7 @@ g_c <- g_c %>%
       geom_point() +
       facet_wrap(ncol = 1, ~year) +
       coord_cartesian(ylim = c(38, 87), xlim = c(0,110000)) +
-      theme(legend.position = "bottom"
+      theme(legend.position = "bottom")
     ```
 
     ```{r}
@@ -337,7 +338,7 @@ g_c <- g_c %>%
       geom_point() +
       facet_wrap(ncol = 1, ~year) +
       coord_cartesian(ylim = c(38, 87), xlim = c(0,110000)) +
-      theme(legend.position = "bottom"
+      theme(legend.position = "bottom")
     ```
 
 ## 18. Do the same four plots as above, but now use the log transform of gdpPercap, i.e mapping.
@@ -348,7 +349,7 @@ g_c <- g_c %>%
       ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       coord_cartesian(ylim = c(5, 12), xlim = c(30, 100)) +
-      theme(legend.position = "bottom"
+      theme(legend.position = "bottom")
     ```
 
     ```{r}
@@ -357,7 +358,7 @@ g_c <- g_c %>%
       ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       coord_cartesian(ylim = c(5, 12), xlim = c(30, 100)) +
-      theme(legend.position = "bottom"
+      theme(legend.position = "bottom")
     ```
 
     ```{r}
@@ -366,7 +367,7 @@ g_c <- g_c %>%
       ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       coord_cartesian(ylim = c(5, 12), xlim = c(30, 100)) +
-      theme(legend.position = "bottom"
+      theme(legend.position = "bottom")
     ```
 
     ```{r}
@@ -375,7 +376,7 @@ g_c <- g_c %>%
       ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       coord_cartesian(ylim = c(5, 12), xlim = c(30, 100)) +
-      theme(legend.position = "bottom"
+      theme(legend.position = "bottom")
     ```
 
 ## 19. How will you characterise the development the 59 years from 1960 to 2019?
