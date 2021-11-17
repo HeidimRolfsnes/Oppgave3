@@ -6,6 +6,7 @@ lang: nb-NO
 
 ```{r setup, echo = FALSE}
 suppressMessages(library(tidyverse))
+suppressMessages(library(lubridate))
 suppressMessages(library(tibble))
 suppressMessages(library(gapminder))
 suppressMessages(library(readr))
@@ -16,18 +17,16 @@ options(scipen = 999)
 
 ## 1. What information does the file ddf_concepts.csv contain?
 
-Filen ddf--concepts.csv ser ut til å inneholde en kort beskrivelse av
-datasettene som finnes i mappen *countries-etc-datapoints*.
+Filen ddf--concepts.csv ser ut til å inneholde en kort beskrivelse av datasettene som finnes i mappen *countries-etc-datapoints*.
 
 ## 2. What information does the file ddf---entities--geo---country.csv contain?
 
-Beskrivelse av hvert enkelt land i datasettet slik som navn,
-forkortelse, verdensdel, geografiske koordinater, forkortelser etc.
+Beskrivelse av hvert enkelt land i datasettet slik som navn, forkortelse, verdensdel, geografiske koordinater, forkortelser etc.
 
 ## 3. What information does the the file ddg_entities--geo--un_sdg_region.csv contain?
 
-Gir oss ulike regioner definert av FN. Ser at Australia og New Zealand
-er en egen region etter denne definisjonen.
+Gir oss ulike regioner definert av FN.
+Ser at Australia og New Zealand er en egen region etter denne definisjonen.
 
 ## 4. What variables does the gapminder dataset from the gapminder package contain? To what continent are Australia and New Zealand assigned?
 
@@ -48,7 +47,6 @@ er en egen region etter denne definisjonen.
 ## 5. Recreate the continent variable in gapminder with the new data?
 
 Vi flytter Australia og New Zealand fra Asia til Osceania for å være på line med gapminder
-    
 
 ```{r Nytt datasett}
 g_c <- read_csv("data/ddf--entities--geo--country.csv")
@@ -56,12 +54,10 @@ print(g_c)
 ```
 
     Ser at Australia og New Zealand tilhører kontinentet Osceania i gapminder datasettet.
-    
-    
+
 ```{r}
 spec(g_c)
 ```
-    
 
 ```{r}
     g_c <- g_c %>%
@@ -73,8 +69,7 @@ spec(g_c)
      world_4region == "europe" ~ "Europe")
    ) %>% 
    filter(!is.na(iso3166_1_alpha3))
-    ```
-
+```
 
 ## 6. How many countries are there now?
 
@@ -95,31 +90,30 @@ g_c %>%
 ## 7. Create the variable Life Expectancy (lifeExp) in g_c from the file
 
     ```{r forventet levetid i antall land}
-lifeExp <- read_csv("data/countries-etc-datapoints/ddf--datapoints--life_expectancy_years--by--geo--time.csv",
-col_types = cols(time = col_date(format = "%Y")))
-lifeExp <- lifeExp %>% 
-  rename(year = time)
-names(lifeExp)
-length(unique(lifeExp$geo))
-```
-
+    lifeExp <- read_csv("data/countries-etc-datapoints/ddf--datapoints--life_expectancy_years--by--geo--time.csv",
+    col_types = cols(time = col_date(format = "%Y")))
+    lifeExp <- lifeExp %>% 
+      rename(year = time)
+    names(lifeExp)
+    length(unique(lifeExp$geo))
+    ```
 
 ## 8. How many countries have information about lifeExp?
 
     195 land har informasjon om levetid.
+
 ```{r Levetid land}
 length(unique(lifeExp$geo))
 ```
-    
 
-## 9. reduce g_c to the variables: country, name, iso3166_1_alpha3,un_sdg_region, world_4region, continent, world_6region
+## 9. reduce g_c to the variables: country, name, iso3166_1\_alpha3,un_sdg_region, world_4region, continent, world_6region
 
     ```{r Reduser variabler}
-g_c <- g_c %>%
-  select(country, name, iso3166_1_alpha3, un_sdg_region, world_4region, continent, world_6region) %>%
-  left_join(lifeExp, by = c("country" = "geo"))
+    g_c <- g_c %>%
+      select(country, name, iso3166_1_alpha3, un_sdg_region, world_4region, continent, world_6region) %>%
+      left_join(lifeExp, by = c("country" = "geo"))
     ```
-    
+
 ```{r navn}
 names(g_c)
 ```
@@ -147,7 +141,6 @@ tibble(country = unique(g_c_min$name))
 
 ## 12. Read in the total_population and join with g_c
 
-
 ```{r folketall}
 pop <- read_csv("data/countries-etc-datapoints/ddf--datapoints--population_total--by--geo--time.csv",
                  col_types = cols(time = col_date(format = "%Y")))
@@ -162,7 +155,7 @@ g_c <- g_c %>%
 
     ```{r Datasett}
     gdp_pc <- read_csv("data/countries-etc-datapoints/ddf--datapoints--gdppercapita_us_inflation_adjusted--by--geo--time.csv",
- col_types = cols(time = col_date(format = "%Y")))
+     col_types = cols(time = col_date(format = "%Y")))
     ```
 
 ```{r}
@@ -175,11 +168,17 @@ rm(gdp_pc)
     g_c <- g_c %>%
       rename(lifeExp = "life_expectancy_years") %>%
       rename(pop = "population_total") %>%
-      rename(gdpPercap = "gdppercapita_us_inflation_adjusted") %>%
-      names(g_c)
+      rename(gdpPercap = "gdppercapita_us_inflation_adjusted")
+                          
+    # slik kan dere se de nye navnene. names() til slutt i pipen er litt farlig.
+    # hvis vi starter pipen med g_c %>% vil se se navnene i dataframen som ønsket
+    # Endrer vi til g_c <- g_c %>% vil vi overskrive hele dataframen med variabelnavnene
+    # Hvis en bare vil se navnene er Environment i høyre hjørne glimrende. Ve å klikke på
+    # den lille pilen får en se hva som er definert i et objekt
+    names(g_c)
     ```
 
-```{r navn}
+```{r navn2}
 names(g_c)
 ```
 
@@ -204,6 +203,11 @@ table(g_c_gdpprc$min_year)
 
 ## 15. Make a vector containing the names of the countries with the longest time series for gdp per capita
 
+```{r}
+# Tar vare på g_c (hele datasettet)som my_gapminder
+my_gapminder <- g_c
+```
+
 ```{r vector}
 g_c <- g_c %>%
   filter(!is.na(gdpPercap)) %>%
@@ -216,50 +220,67 @@ print(g_c)
 ## 16. make a subset of gapminder, my_gapminder_1960, which include countries with data from 1960-2019. How many countries are now in the dataset? How many countries from each continent? how many NAs are there in my_gapminder_1960
 
     ```{r}
-  c_m_y_60 <- g_c_5 %>%
+      c_m_y_60 <- g_c_5 %>%
       filter(!is.na(gdpPercap)) %>%
       group_by(country) %>%
       summarise(min_year = min(year))
-   
     ```
 
 ```{r}
 dim(c_m_y_60)
 ```
-   
+
 ```{r}
-c_m_y_60 <- my_gapminder_60$country[my_gapminder_60$min_year == "1960-01-01"]
-my_gapminder_60 <- g_c_5 %>%
-  filter(country %in% c_m_y_60)
+# problem med navn
+#c_m_y_60 <- my_gapminder_60$country[my_gapminder_60$min_year == "1960-01-01"]
+#my_gapminder_60 <- g_c_5 %>%
+#  filter(country %in% c_m_y_60)
+
+c_m_y_60 <- c_m_y_60$country[c_m_y_60$min_year == "1960-01-01"]
+
+my_gapminder_1960 <- g_c_5 %>%
+  filter(country %in% c_m_y_60) %>% 
+  # Vil bare ha data f.o.m 1960 for disse landene
+  filter(year(year) >= 1960)
 ```
-      
+
 ```{r observasjoner}
-dim(my_gapminder_60)
+dim(my_gapminder_1960)
 ```
-      
+
 ```{r antall land }
-length(unique(my_gapminder_60$country))
+length(unique(my_gapminder_1960$country))
 ```
+
 ```{r}
-(num_NA <- c_m_y_60[is.na(c_m_y_60$gdpPercap) == TRUE, ])
+#(num_NA <- c_m_y_60[is.na(c_m_y_60$gdpPercap) == TRUE, ])
+# is.na gir TRUE (som er 1) hvis NA og FALSE (som er 0) hvis ikke NA.  
+sum(is.na(my_gapminder_1960$gdpPercap))
 ```
+
 ```{r}
-paste("Number of NAs in g_c_1960 is", dim(num_NA)[1], sep = " ")
+# et alternativ til ovenfor
+is.na(my_gapminder_1960$gdpPercap) %>% 
+  table()
+```
+
+```{r}
+#paste("Number of NAs in g_c_1960 is", dim(num_NA)[1], sep = " ")
+paste("Number of NAs in g_c_1960 is", sum(is.na(my_gapminder_1960$gdpPercap)))
 ```
 
 ```{r Kontinenter}
-g_c_1960 %>%
+my_gapminder_1960 %>%
   distinct(country, continent) %>%
   group_by(continent) %>%
   count() %>%
   kable()
 ```
 
-
 ## 17. Use ggplot() and let x be gdpPercap, y be lifeExp and size the population. Make a plot for each of the year 1960, 1980, 2000 and 2019.
 
     ```{r 1960}
-    g_c_1960 %>%
+    my_gapminder_1960 %>%
       filter(year <= "1960-01-01") %>%
       ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
@@ -270,8 +291,10 @@ g_c_1960 %>%
     ```
 
     ```{r 1980}
-    g_c_1960 %>%
-      filter(year <= "1980-01-01") %>%
+    my_gapminder_1960 %>%
+      # velger 1980
+      #filter(year <= "1980-01-01") %>%
+      filter(year == "1980-01-01") %>%
       ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       facet_wrap(ncol = 1, ~year) +
@@ -281,8 +304,8 @@ g_c_1960 %>%
     ```
 
     ```{r 2000}
-     g_c_1960 %>%
-      filter(year <= "2000-01-01") %>%
+     my_gapminder_1960 %>%
+      filter(year == "2000-01-01") %>%
       ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       facet_wrap(ncol = 1, ~year) +
@@ -292,8 +315,8 @@ g_c_1960 %>%
     ```
 
     ```{r 2019}
-     g_c_1960 %>%
-      filter(year <= "2019-01-01") %>%
+     my_gapminder_1960 %>%
+      filter(year == "2019-01-01") %>%
       ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       facet_wrap(ncol = 1, ~year) +
@@ -304,9 +327,9 @@ g_c_1960 %>%
 
 ## 18. Do the same four plots as above, but now use the log transform of gdpPercap, i.e mapping.
 
-    ```{r 1960}
-    g_c_1960 %>%
-      filter(year <= "1960-01-01") %>%
+    ```{r 1960gdp}
+    my_gapminder_1960 %>%
+      filter(year == "1960-01-01") %>%
       ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       coord_cartesian(ylim = c(20, 90), xlim = c(5, 11)) +
@@ -314,9 +337,9 @@ g_c_1960 %>%
       theme(legend.position = "bottom")
     ```
 
-    ```{r 1980}
-   g_c_1960 %>%
-      filter(year <= "1980-01-01") %>%
+    ```{r 1980gdp}
+       my_gapminder_1960 %>%
+      filter(year == "1980-01-01") %>%
       ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       coord_cartesian(ylim = c(20, 90), xlim = c(5, 11)) +
@@ -324,9 +347,9 @@ g_c_1960 %>%
       theme(legend.position = "bottom")
     ```
 
-    ```{r 2000}
-  g_c_1960 %>%
-      filter(year <= "2000-01-01") %>%
+    ```{r 2000gdp}
+      my_gapminder_1960 %>%
+      filter(year == "2000-01-01") %>%
       ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       coord_cartesian(ylim = c(20, 90), xlim = c(5, 12)) +
@@ -334,9 +357,9 @@ g_c_1960 %>%
       theme(legend.position = "bottom")
     ```
 
-    ```{r 2019}
-  g_c_1960 %>%
-      filter(year <= "2019-01-01") %>%
+    ```{r 2019gdp}
+      my_gapminder_1960 %>%
+      filter(year == "2019-01-01") %>%
       ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
       coord_cartesian(ylim = c(20, 90), xlim = c(5, 12)) +
@@ -349,9 +372,14 @@ g_c_1960 %>%
     Levetiden har økt betraktelig fra 1960 til 2019.
 
 ## 20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
-```{r Lagre datafiler}
-write.table(g_c_5, file="my_gapminder.csv", sep = ",")
-write.table(g_c_1960, file="my_gapminder_red.csv", sep = ",")
 
+```{r Lagre datafiler}
+#write.table(g_c_5, file="my_gapminder.csv", sep = ",")
+#write.table(g_c_1960, file="my_gapminder_red.csv", sep = ",")
+write.table(my_gapminder, file="my_gapminder.csv", sep = ",")
+write.table(my_gapminder_1960, file="my_gapminder_red.csv", sep = ",")
 ```
 
+```{r}
+#siste
+```

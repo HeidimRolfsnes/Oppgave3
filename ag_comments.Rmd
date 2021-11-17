@@ -1,0 +1,9 @@
+---
+title: "ag comments"
+output: html_notebook
+---
+
+-   Vær forsiktig med names() i pipe. Fort gjort å overskrive dataframen med bare navnene. Ønsker der å se hva dataframen inneholder så bruk heller names(navn_df) i Console eller ta en titt under Environment fanen i øvre høyre hjørne.
+-   Dere hadde brukt sammen navn på noen chunks, da stopper alt.
+-   Litt rot med navnene på dataframes mot slutten. Jeg har fikset så nå virker det.
+-   Lurt å velge «Restart R and Clear Output» før dere knit-er en siste gang for å sjekke at alt virker. Ellers risikerer dere at dokumentet ikke er reproduserbart.
