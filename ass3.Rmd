@@ -286,7 +286,7 @@ my_gapminder_1960 %>%
       geom_point() +
       facet_wrap(ncol = 1, ~year) +
       coord_cartesian(ylim = c(20, 90), xlim = c(0,30000)) +
-       ggtitle("1960") +
+       ggtitle("1960") + 
       theme(legend.position = "bottom")
     ```
 
