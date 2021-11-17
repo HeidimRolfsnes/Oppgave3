@@ -253,9 +253,8 @@ length(unique(my_gapminder_1960$country))
 ```
 
 ```{r}
-#(num_NA <- c_m_y_60[is.na(c_m_y_60$gdpPercap) == TRUE, ])
+(num_NA <- c_m_y_60[is.na(c_m_y_60$gdpPercap) == TRUE, ])
 # is.na gir TRUE (som er 1) hvis NA og FALSE (som er 0) hvis ikke NA.  
-sum(is.na(my_gapminder_1960$gdpPercap))
 ```
 
 ```{r}
