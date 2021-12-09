@@ -11,3 +11,4 @@ output:
 -   Dere hadde noen innrykk på chuncks som jeg ikke vet hvor stammer fra. Fjernet disse for å få koden til å kjøre.
 -   Måtte endre et chunk navn duplikat
 -   Også duplikat for chunk-ene med plot. Endret de siste til log1960, log1980 etc.
+-   Litt problemer med pull request. Håper jeg har fått fikset det.
