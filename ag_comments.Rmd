@@ -1,9 +1,9 @@
 ---
 title: "ag_comments"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 -   Under punkt 16 måtte jeg lage meg `my_gapminder_60` fra `g_c_5` for å få de 85 landene med data fra 1960. Skjønte ikke helt hva dere hadde prøvd å gjøre. Ble for avansert for meg ;-)
@@ -11,4 +11,3 @@ output:
 -   Dere hadde noen innrykk på chuncks som jeg ikke vet hvor stammer fra. Fjernet disse for å få koden til å kjøre.
 -   Måtte endre et chunk navn duplikat
 -   Også duplikat for chunk-ene med plot. Endret de siste til log1960, log1980 etc.
--   Litt problemer med pull request. Håper jeg har fått fikset det.
