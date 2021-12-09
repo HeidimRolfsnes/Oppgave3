@@ -2,6 +2,7 @@
 title: "R Notebook"
 author: "Ann Elisabeth Jacobsen og Heidi Marie Rolfsnes"
 lang: nb-NO
+output: pdf_document
 ---
 
 ```{r setup, echo = FALSE}
@@ -64,7 +65,7 @@ spec(g_c)
     
 
 ```{r}
-    g_c <- g_c %>%
+g_c <- g_c %>%
    mutate(continent = case_when(
      world_4region == "asia" & un_sdg_region %in% c("un_australia_and_new_zealand","un_oceania_exc_australia_and_new_zealand") ~ "Oceania",
      world_4region == "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", "un_oceania_exc_australia_and_new_zealand")) ~ "Asia",
@@ -73,7 +74,7 @@ spec(g_c)
      world_4region == "europe" ~ "Europe")
    ) %>% 
    filter(!is.na(iso3166_1_alpha3))
-    ```
+```
 
 
 ## 6. How many countries are there now?
@@ -94,7 +95,7 @@ g_c %>%
 
 ## 7. Create the variable Life Expectancy (lifeExp) in g_c from the file
 
-    ```{r forventet levetid i antall land}
+```{r forventet levetid i antall land}
 lifeExp <- read_csv("data/countries-etc-datapoints/ddf--datapoints--life_expectancy_years--by--geo--time.csv",
 col_types = cols(time = col_date(format = "%Y")))
 lifeExp <- lifeExp %>% 
@@ -114,11 +115,11 @@ length(unique(lifeExp$geo))
 
 ## 9. reduce g_c to the variables: country, name, iso3166_1_alpha3,un_sdg_region, world_4region, continent, world_6region
 
-    ```{r Reduser variabler}
+```{r Reduser variabler}
 g_c <- g_c %>%
   select(country, name, iso3166_1_alpha3, un_sdg_region, world_4region, continent, world_6region) %>%
   left_join(lifeExp, by = c("country" = "geo"))
-    ```
+```
     
 ```{r navn}
 names(g_c)
@@ -126,12 +127,12 @@ names(g_c)
 
 ## 10. What is the first observation of lifeExp for the different countries?
 
-    ```{r levetid i ulike land}
+```{r levetid i ulike land}
     g_c_min <- g_c %>%
       group_by(country) %>%
       summarise(min_year = min(lifeExp$year))
       table(g_c_min$min_year)
-    ```
+```
 
 De første 186 observasjonene er fra 1800, mens de resterende 9 er fra 1950.
 
@@ -175,11 +176,17 @@ rm(gdp_pc)
     g_c <- g_c %>%
       rename(lifeExp = "life_expectancy_years") %>%
       rename(pop = "population_total") %>%
-      rename(gdpPercap = "gdppercapita_us_inflation_adjusted") %>%
-      names(g_c)
+      rename(gdpPercap = "gdppercapita_us_inflation_adjusted") 
+    
+    # %>%
+      # g_c flyter alt i pipen og vil være første argument til names
+      #names(g_c)
+      #names()
     ```
 
-```{r navn}
+```{r navn g_c}
+# denne for å se variabel navnene. Farlig i pipe hvor en tilornder som ovenfor. Ender opp med at g_c 
+# bare innholder variabelnavnene og ingenting annet
 names(g_c)
 ```
 
@@ -192,6 +199,7 @@ t1 <- paste(c(seq(1800,2015, by = 5), 2019), "01-01", sep = "-") %>%
 g_c_5 <- g_c %>%
   filter(year %in% t1) %>%
   select(country, name, continent, year, lifeExp, pop, gdpPercap)
+
 dim(g_c_5)
 ```
 
@@ -199,6 +207,7 @@ dim(g_c_5)
 g_c_gdpprc <- g_c_5 %>% 
   group_by(gdpPercap) %>% 
   summarise(min_year = min(year))
+
 table(g_c_gdpprc$min_year)
 ```
 
@@ -210,27 +219,55 @@ g_c <- g_c %>%
   group_by(name) %>%
     summarise(nr = n()) %>%
     arrange(name)
+
 print(g_c)
 ```
 
 ## 16. make a subset of gapminder, my_gapminder_1960, which include countries with data from 1960-2019. How many countries are now in the dataset? How many countries from each continent? how many NAs are there in my_gapminder_1960
 
-    ```{r}
-  c_m_y_60 <- g_c_5 %>%
+```{r}
+c_m_y_60 <- g_c_5 %>%
       filter(!is.na(gdpPercap)) %>%
-      group_by(country) %>%
+      # name trengs ikke her i group_by men triks for å få name variabelen med i output
+      group_by(country, name) %>%
       summarise(min_year = min(year))
-   
-    ```
+  
+head(c_m_y_60)
+```
+
+```{r}
+# Plukker ut det minste min_year (første år vi har data for)
+fy <- c_m_y_60 %>% 
+  mutate(
+    aar = as.numeric(lubridate::year(min_year))
+  )
+  
+first_year <- paste(min(fy$aar), "01", "01", sep = "-")
+```
+
+```{r}
+#land med data fra 1960
+country_1960 <- c_m_y_60 %>% 
+  filter(min_year == first_year) %>% 
+  select(country) %>% 
+  # for å få country ut av tibblene
+  pull()
+# nå har vi en vector med 85 land forkortelser for dem som har data fra 1960
+```
 
 ```{r}
 dim(c_m_y_60)
 ```
    
 ```{r}
-c_m_y_60 <- my_gapminder_60$country[my_gapminder_60$min_year == "1960-01-01"]
+#c_m_y_60 <- my_gapminder_60$country[my_gapminder_60$min_year == "1960-01-01"]
+
 my_gapminder_60 <- g_c_5 %>%
-  filter(country %in% c_m_y_60)
+  filter(!is.na(gdpPercap)) %>% 
+  filter(country %in% country_1960)
+
+
+my_gapminder_60 
 ```
       
 ```{r observasjoner}
@@ -241,14 +278,15 @@ dim(my_gapminder_60)
 length(unique(my_gapminder_60$country))
 ```
 ```{r}
-(num_NA <- c_m_y_60[is.na(c_m_y_60$gdpPercap) == TRUE, ])
+# kommentert ut for å få dokumentet til å kjøre
+#num_NA <- sum(is.na(c_m_y_60$gdpPercap))
 ```
 ```{r}
-paste("Number of NAs in g_c_1960 is", dim(num_NA)[1], sep = " ")
+#paste("Number of NAs in g_c_1960 is", dim(num_NA)[1], sep = " ")
 ```
 
 ```{r Kontinenter}
-g_c_1960 %>%
+my_gapminder_60 %>%
   distinct(country, continent) %>%
   group_by(continent) %>%
   count() %>%
@@ -258,91 +296,99 @@ g_c_1960 %>%
 
 ## 17. Use ggplot() and let x be gdpPercap, y be lifeExp and size the population. Make a plot for each of the year 1960, 1980, 2000 and 2019.
 
-    ```{r 1960}
-    g_c_1960 %>%
+```{r 1960}
+    my_gapminder_60 %>%
       filter(year <= "1960-01-01") %>%
       ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
-      facet_wrap(ncol = 1, ~year) +
-      coord_cartesian(ylim = c(20, 90), xlim = c(0,30000)) +
+      coord_cartesian(ylim = c(20, 90), xlim = c(0,110000)) +
        ggtitle("1960") +
       theme(legend.position = "bottom")
-    ```
+```
 
-    ```{r 1980}
-    g_c_1960 %>%
-      filter(year <= "1980-01-01") %>%
+```{r 1980}
+    my_gapminder_60 %>%
+      filter(year == "1980-01-01") %>%
       ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
-      facet_wrap(ncol = 1, ~year) +
-      coord_cartesian(ylim = c(20, 90), xlim = c(0,30000)) +
+      coord_cartesian(ylim = c(20, 90), xlim = c(0,110000)) +
        ggtitle("1980") +
       theme(legend.position = "bottom")
-    ```
+```
 
-    ```{r 2000}
-     g_c_1960 %>%
-      filter(year <= "2000-01-01") %>%
+```{r 2000}
+     my_gapminder_60 %>%
+      filter(year == "2000-01-01") %>%
       ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
-      facet_wrap(ncol = 1, ~year) +
-      coord_cartesian(ylim = c(20, 90), xlim = c(0,30000)) +
+      coord_cartesian(ylim = c(20, 90), xlim = c(0,110000)) +
        ggtitle("2000") +
       theme(legend.position = "bottom")
-    ```
+```
 
-    ```{r 2019}
-     g_c_1960 %>%
-      filter(year <= "2019-01-01") %>%
+```{r 2019}
+     my_gapminder_60 %>%
+      filter(year == "2019-01-01") %>%
       ggplot(mapping = aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
       geom_point() +
-      facet_wrap(ncol = 1, ~year) +
       coord_cartesian(ylim = c(20, 90), xlim = c(0,110000)) +
        ggtitle("2019") +
       theme(legend.position = "bottom")
-    ```
+```
 
 ## 18. Do the same four plots as above, but now use the log transform of gdpPercap, i.e mapping.
 
-    ```{r 1960}
-    g_c_1960 %>%
-      filter(year <= "1960-01-01") %>%
-      ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
-      geom_point() +
-      coord_cartesian(ylim = c(20, 90), xlim = c(5, 11)) +
-       ggtitle("1960") +
-      theme(legend.position = "bottom")
-    ```
+```{r log1960}
+my_gapminder_60 %>%
+  filter(year == "1960-01-01") %>%
+  ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+  # coord_cartesian() helt greit, men disse to er kanskje lettere å huske
+  xlim(5, 12) +  
+  ylim(20, 90) +
+  geom_point() +
+  # coord_cartesian(ylim = c(20, 90), xlim = c(5, 11)) +
+  ggtitle("1960") +
+  theme(legend.position = "bottom")
+```
 
-    ```{r 1980}
-   g_c_1960 %>%
-      filter(year <= "1980-01-01") %>%
-      ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
-      geom_point() +
-      coord_cartesian(ylim = c(20, 90), xlim = c(5, 11)) +
-       ggtitle("1980") +
-      theme(legend.position = "bottom")
-    ```
+```{r log1980}
+my_gapminder_60 %>%
+  filter(year == "1980-01-01") %>%
+  ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+  # coord_cartesian() helt greit, men disse to er kanskje lettere å huske
+  xlim(5, 12) +  
+  ylim(20, 90) +
+  geom_point() +
+  # coord_cartesian(ylim = c(20, 90), xlim = c(5, 11)) +
+  ggtitle("1980") +
+  theme(legend.position = "bottom")
+```
 
-    ```{r 2000}
-  g_c_1960 %>%
-      filter(year <= "2000-01-01") %>%
-      ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
-      geom_point() +
-      coord_cartesian(ylim = c(20, 90), xlim = c(5, 12)) +
-       ggtitle("2000") +
-      theme(legend.position = "bottom")
-    ```
+```{r log2000}
+my_gapminder_60 %>%
+  filter(year == "2000-01-01") %>%
+  ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+  # coord_cartesian() helt greit, men disse to er kanskje lettere å huske
+  xlim(5, 12) +  
+  ylim(20, 90) +
+  geom_point() +
+  # coord_cartesian(ylim = c(20, 90), xlim = c(5, 11)) +
+  ggtitle("2000") +
+  theme(legend.position = "bottom")
+```
 
-    ```{r 2019}
-  g_c_1960 %>%
-      filter(year <= "2019-01-01") %>%
-      ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
-      geom_point() +
-      coord_cartesian(ylim = c(20, 90), xlim = c(5, 12)) +
-       ggtitle("2019") +
-      theme(legend.position = "bottom")
-    ```
+```{r log2019}
+my_gapminder_60 %>%
+  filter(year == "2019-01-01") %>%
+  ggplot(mapping = aes(x = log(gdpPercap), y = lifeExp, size = pop, colour = continent)) +
+  # coord_cartesian() helt greit, men disse to er kanskje lettere å huske
+  xlim(5, 12) +  
+  ylim(20, 90) +
+  geom_point() +
+  # coord_cartesian(ylim = c(20, 90), xlim = c(5, 11)) +
+  ggtitle("2019") +
+  theme(legend.position = "bottom")
+```
 
 ## 19. How will you characterise the development the 59 years from 1960 to 2019?
 
@@ -351,7 +397,12 @@ g_c_1960 %>%
 ## 20. Save your datafiles as my_gapminder.csv and my_gapminder_red.csv
 ```{r Lagre datafiler}
 write.table(g_c_5, file="my_gapminder.csv", sep = ",")
-write.table(g_c_1960, file="my_gapminder_red.csv", sep = ",")
+#write.table(g_c_1960, file="my_gapminder_red.csv", sep = ",")
+# try to use tidyverse functions
+write_csv(my_gapminder_60, file = "my_gapminder_60.csv")
+```
 
+```{r, echo = FALSE}
+#siste
 ```
 
